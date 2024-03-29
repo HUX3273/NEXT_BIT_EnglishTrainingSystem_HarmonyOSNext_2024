@@ -65,7 +65,7 @@ struct MainPage {
             .margin({ top: 50, right: 10 })
             .onClick(() => {
               // 跳转到排名页面
-              router.replaceUrl({
+              router.pushUrl({
                 url: 'pages/RankPage',
               });
             })

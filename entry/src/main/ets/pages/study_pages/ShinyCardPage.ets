@@ -170,7 +170,6 @@ struct ShinyCardPage {
           Column() {
             if (this.seeAnswer == true) {
               Column() {
-                // TODO 随机从数组中取一个图片
                 Image(this.studyList.flashcards[this.pageIndex].images[0])
                   .height('50%')
                   .margin({ top: 20, left: 20, right: 20, bottom: 20 })
