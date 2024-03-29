@@ -1,0 +1,28 @@
+{
+  "float": [
+    {
+      "name": "logo_image_size",
+      "value": "78vp"
+    },
+    {
+      "name": "page_title_text_size",
+      "value": "36fp"
+    },
+    {
+      "name": "page_padding_horizontal",
+      "value": "24vp"
+    },
+    {
+      "name": "login_page_padding_vertical",
+      "value": "24vp"
+    },
+    {
+      "name": "login_button_margin_top",
+      "value": "40vp"
+    },
+    {
+      "name": "login_button_margin_bottom",
+      "value": "40vp"
+    }
+  ]
+}

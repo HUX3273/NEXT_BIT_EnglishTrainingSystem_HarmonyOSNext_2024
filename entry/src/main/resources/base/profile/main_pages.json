@@ -1,0 +1,17 @@
+{
+  "src": [
+    "pages/LoginPage",
+    "pages/MainPage",
+    "pages/WebPage",
+    "pages/TestPage",
+    "pages/RankPage",
+    "pages/SimpleMediaPlay",
+    "pages/PictureBookReader",
+    "pages/study_pages/MouthPage",
+    "pages/study_pages/EyePage",
+    "pages/study_pages/ShinyCardPage",
+    "pages/study_pages/PictureBookPage",
+    "pages/study_pages/OralPracticePage",
+    "pages/study_pages/EarPage"
+  ]
+}

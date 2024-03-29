@@ -1,0 +1,64 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "label"
+    },
+    {
+      "name": "login",
+      "value": "Login"
+    },
+    {
+      "name": "account",
+      "value": "Account"
+    },
+    {
+      "name": "captcha",
+      "value": "Captcha"
+    },
+    {
+      "name": "get_captcha",
+      "value": "Get Captcha"
+    },
+    {
+      "name": "input_empty_tips",
+      "value": "Input cannot be blank"
+    },
+    {
+      "name": "mouth",
+      "value": "Mouth"
+    },
+    {
+      "name": "eye",
+      "value": "Eye"
+    },
+    {
+      "name": "ear",
+      "value": "Ear"
+    },
+    {
+      "name": "shiny_card",
+      "value": "Shiny Card"
+    },
+    {
+      "name": "picture_book",
+      "value": "Picture Book"
+    },
+    {
+      "name": "oral_practice",
+      "value": "Oral Practice"
+    },
+    {
+      "name": "empty",
+      "value": "Empty"
+    }
+  ]
+}

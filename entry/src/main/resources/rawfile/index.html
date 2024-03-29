@@ -1,0 +1,23 @@
+<html>
+
+<body>
+
+<p>hello how are you ?</p>
+
+
+
+<script src="js/jquery.min.js"></script>
+
+<script>
+
+var p = $('p');
+p.html(function(index, oldHtml) {
+    return oldHtml.replace(/\b(\w+?)\b/g, '<span class="word">$1</span>')
+});
+p.click(function(event) { alert(event.target.innerHTML) });
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "模块描述"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "label"
+    },
+    {
+      "name": "login",
+      "value": "登录"
+    },
+    {
+      "name": "account",
+      "value": "账号"
+    },
+    {
+      "name": "captcha",
+      "value": "验证码"
+    },
+    {
+      "name": "get_captcha",
+      "value": "获取验证码"
+    },
+    {
+      "name": "input_empty_tips",
+      "value": "输入不能为空"
+    },
+    {
+      "name": "mouth",
+      "value": "磨嘴巴"
+    },
+    {
+      "name": "eye",
+      "value": "磨眼睛"
+    },
+    {
+      "name": "ear",
+      "value": "磨耳朵"
+    },
+    {
+      "name": "shiny_card",
+      "value": "闪卡"
+    },
+    {
+      "name": "picture_book",
+      "value": "绘本"
+    },
+    {
+      "name": "oral_practice",
+      "value": "口语"
+    },
+    {
+      "name": "empty",
+      "value": "空"
+    }
+  ]
+}

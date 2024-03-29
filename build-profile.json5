@@ -1,0 +1,42 @@
+{
+  "app": {
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compileSdkVersion": "4.1.0(11)",
+        "compatibleSdkVersion": "4.1.0(11)",
+        "runtimeOS": "HarmonyOS"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\13219\\.ohos\\config\\default_api11-BIT_EnglishTrainingSystem_HarmonyOSNext_2024_GN4JrHEBlM874ciKNrkSILTwPBHUlORUq5AdJaIVfdE=.cer",
+          "storePassword": "0000001B7AB40324C070E18679B02BBE5266B9F01E204169A9C46AC7B5DF8A30AAB169D14E3710963AD872",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B0BAAF7AB16876F208F0FDCC9F46A56AA245C5369542440819A1AB796BEC8038C69BB749DBCEB9A",
+          "profile": "C:\\Users\\13219\\.ohos\\config\\default_api11-BIT_EnglishTrainingSystem_HarmonyOSNext_2024_GN4JrHEBlM874ciKNrkSILTwPBHUlORUq5AdJaIVfdE=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\13219\\.ohos\\config\\default_api11-BIT_EnglishTrainingSystem_HarmonyOSNext_2024_GN4JrHEBlM874ciKNrkSILTwPBHUlORUq5AdJaIVfdE=.p12"
+        }
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
