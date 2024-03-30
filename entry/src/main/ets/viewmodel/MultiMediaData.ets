@@ -48,4 +48,3 @@ export const HORIZONTAL_PICTUREBOOKS:HorizontalPictureBookItem[] = [
 
 
 
-// TODO 从后端取到数据后应该对数据进行处理，然后根据数据改变 HorizontalMultiMediaItem 数组内容

@@ -20,7 +20,6 @@ export struct MultiMediaModule {
     await PreferencesUtil.getToken().then((value) => {
       this.token = value
     });
-
   }
 
   build() {
@@ -81,37 +80,54 @@ struct HorizontalItem {
   private token: string = '';
   private subtitleText: string = '';
   private subtitleUrl: string = '';
+  @State isPageLoading: Boolean = true
 
   aboutToAppear() {
-    // PreferencesUtil.getToken().then((value) => {
-    //   this.token = value
-    // });
-
     this.getSubtitle_HTTP()
-
-
   }
 
   build() {
     Column() {
-      Flex() {
-        Image(this.imageSrc)
-          .width(150)
-          .height(104)
-          .margin({ left: 8, right: 5 })
-          .borderRadius(24)
-          .backgroundColor("#ffaeabab")
-        Text(this.mediaName)
-          .margin({
-            top: 12,
-            bottom: 12
-          })
-          .textAlign(TextAlign.Center)
-          .fontSize(16)
-          .fontWeight(FontWeight.Medium)
-      }
-      //.backgroundColor('#ffb1b1b1')
 
+      if(this.isPageLoading == true){
+
+        Flex() {
+          LoadingProgress()
+            .width(150)
+            .height(104)
+            .margin({ left: 8, right: 5 })
+
+          Text()
+            .margin({
+              top: 12,
+              bottom: 12
+            })
+            .textAlign(TextAlign.Center)
+            .fontSize(16)
+            .fontWeight(FontWeight.Medium)
+        }
+
+
+      } else {
+        Flex() {
+          Image(this.imageSrc)
+            .width(150)
+            .height(104)
+            .margin({ left: 8, right: 5 })
+            .borderRadius(24)
+            .backgroundColor("#ffaeabab")
+          Text(this.mediaName)
+            .margin({
+              top: 12,
+              bottom: 12
+            })
+            .textAlign(TextAlign.Center)
+            .fontSize(16)
+            .fontWeight(FontWeight.Medium)
+        }
+
+
+      }
     }
     .justifyContent(FlexAlign.Center)
     .margin({ bottom: 10, top: 10 })
@@ -130,6 +146,7 @@ struct HorizontalItem {
     })
 
   }
+
 
   getSubtitle_HTTP() {
     console.info('==== 获取该视频/音频字幕文件URL')
@@ -171,6 +188,8 @@ struct HorizontalItem {
 
 
         this.downloadFile_HTTP()
+
+
       }
 
 
@@ -228,6 +247,8 @@ struct HorizontalItem {
             console.info('==== 字幕：' + this.subtitleText.substring(0, 100))
         }
 
+
+        this.isPageLoading = false
 
       }
     })

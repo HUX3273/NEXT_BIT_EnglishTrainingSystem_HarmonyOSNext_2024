@@ -20,7 +20,8 @@ export struct AddToShinyCardDialog {
   @State httpPicSrcArr: Array<string> = []; // 存http获取的图片链接
   @State chosenPicSrcArr: Array<string> = []; // 存选中的的图片链接
   // private imagesUrl: Array<string> ;
-  @State isChosenArr: Array<Boolean> = [false, false, false, false, false, false,
+  @State isChosenArr: Array<Boolean> = [
+    false, false, false, false, false, false,
     false, false, false, false, false, false,
     false, false, false, false, false, false,
     false, false, false, false, false, false,
@@ -50,18 +51,11 @@ export struct AddToShinyCardDialog {
 
   build() {
     Column() {
-      Text(this.isFlashCardExist ? '更新旧闪卡':'添加新闪卡')
-        .fontSize(28)
-        .fontWeight(FontWeight.Bold)
-        .margin({ top: 20, bottom: 10 })
-        .height("10%")
-      //.backgroundColor("#ff1176f1")
-
-      // Text(this.word)
-      //   .fontSize(20)
-      //   .fontWeight(FontWeight.Bold)
-      //   .margin({ bottom: 10 })
-
+        Text(this.isFlashCardExist ? '更新旧闪卡':'添加新闪卡')
+          .fontSize(28)
+          .fontWeight(FontWeight.Bold)
+          .margin({ top: 20, bottom: 10 })
+          .height("10%")
 
       Flex({ justifyContent: FlexAlign.SpaceAround }) {
         Grid() {
@@ -149,8 +143,25 @@ export struct AddToShinyCardDialog {
 
       }
       .height('60%')
+      //.backgroundColor("#ffffbf00")
 
-      //.backgroundColor("#ff60ec15")
+
+
+      Column(){
+        Text("上传本地图片")
+          .fontSize(15)
+          .fontColor("#ff0090ff")
+          .fontWeight(FontWeight.Medium)
+          .margin({top:10})
+      }
+      .width('50%')
+      //.backgroundColor("#ff00ff88")
+      .onClick(()=>{
+        // TODO 上传自己本地的图片到闪卡库中
+        console.info("==== 上传自己本地的图片到闪卡库中")
+
+      })
+
 
 
       Row() {
@@ -175,10 +186,7 @@ export struct AddToShinyCardDialog {
             } else if (this.isFlashCardExist == true) {
               this.updateFlashCard_HTTP(this.chosenPicSrcArr)
             }
-
-
             this.onAccept()
-
             this.controller.close()
           })
           .backgroundColor('#EC5706')
@@ -186,8 +194,7 @@ export struct AddToShinyCardDialog {
           .borderRadius(10)
           .width('30%')
       }
-      .margin({ top: 20, bottom: 20 })
-      .height('20%')
+      .margin({ top: 10, bottom: 20 })
       .width("100%")
       //.backgroundColor("#f11111")
       .justifyContent(FlexAlign.Center)

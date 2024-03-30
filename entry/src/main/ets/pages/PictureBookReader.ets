@@ -203,11 +203,6 @@ struct PictureBookReader {
 
 
 
-
-
-
-
-
       // 底部图片滚轮
       List({ space: 10, initialIndex: 0 }) {
         ForEach(this.bookSrc, (item:string, indexTarget) => {
@@ -256,6 +251,16 @@ struct PictureBookReader {
       .margin({ top: 10 })
       .width('90%')
       .height(this.barHeight)
+
+
+
+
+      // todo PDF阅读器
+
+
+
+
+
 
     }
 

@@ -66,8 +66,8 @@ struct Play {
 
   onPageHide() {
     this.controller.pause();
-
     // TODO 同步该视频的播放进度到后台
+
   }
 
   build() {
@@ -105,7 +105,7 @@ struct Play {
             Image($r('app.media.search'))
               .width(26)
               .height(26)
-              .margin({right:10})
+              .margin({right:20})
 
           }
           .height(40)
@@ -321,7 +321,7 @@ struct Play {
   //
   //
   // downloadFile_HTTP(){
-  //   // TODO 根据这个  this.subtitleUrl 链接把字幕文件下载到本地
+  //
   //   console.info('==== 通过URL下载字幕文件')
   //   let url_download = this.subtitleUrl
   //   let httpRequest_download = http.createHttp();
@@ -349,7 +349,7 @@ struct Play {
   //     } else {
   //
   //
-  //       // TODO 怎么把下载的数据读出来？？？
+  //
   //       setTimeout(()=>{
   //         this.subtitleText = data.result.toString()
   //         if(this.subtitleText != '')
