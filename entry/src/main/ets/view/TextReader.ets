@@ -1,7 +1,7 @@
 import util from '@ohos.util';
 import Prompt from '@system.prompt';
 import PreferencesUtil from '../common/database/PreferencesUtil';
-import { WordTranslatorDialog } from '../view/WordTranslator'
+import { WordTranslatorDialog } from './WordTranslatorDialog'
 
 
 
@@ -15,14 +15,12 @@ export struct TextReader {
   @Provide isChosenArr: Array<Boolean> = []; //存该分词是否被选中
   @Provide chosenWordIndex: number = 0;
   scroller: Scroller = new Scroller();
+
   //新建单击查词的窗口控制器
   dialogController_translator: CustomDialogController = new CustomDialogController({
     builder: WordTranslatorDialog({
-      //ancel: this.onCancel,
-      //confirm: this.onAccept,
       word: $word,
-      token: $token
-
+      token: $token,
     }),
     cancel: this.existApp,
     autoCancel: true,
@@ -31,12 +29,13 @@ export struct TextReader {
     gridCount: 4,
     customStyle: false
   })
+
   private videoName: string = '';
   // 正则表达式
   private rExpForSplit: RegExp = /[ \n\t><#=+@$%^&*]/; //用于分词
   //private rExpForNewline: RegExp = /[A-Z]/;  //用于匹配大写首字母然后换行
   private rExpForPunctuation: RegExp = /[.。!！?？]/; //用于检测符号换行
-  private rExpForWord: RegExp = /[a-zA-Z0-9]+/; //用于提取单词
+  private rExpForWord: RegExp = /[a-zA-Z]+/; //用于提取单词
   private subtitleText: string = '';
   private fontSize:number = 30;
   private fontWeight:FontWeight = FontWeight.Bold;

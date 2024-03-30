@@ -63,7 +63,7 @@ struct HorizontalItem {
         .width(132)
         .height(94)
         .onClick(() => {
-          // TODO 点击后打开绘本
+          // 点击后打开绘本
           router.pushUrl({
             url: 'pages/PictureBookReader',
             params: {

@@ -6,6 +6,7 @@ import { Training } from '../model/Training';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import http from '@ohos.net.http';
 import CommonConstants from '../common/constants/CommonConstants';
+import { SearchMyWordDialog } from '../view/SearchMyWordDialog';
 
 
 @Entry
@@ -34,6 +35,21 @@ struct Play {
   @Provide progressVal: number = 0;
   @Provide flag: boolean = false;
 
+
+
+  dialogController_searchMyWord: CustomDialogController = new CustomDialogController({
+    builder: SearchMyWordDialog({
+
+    }),
+    autoCancel: true,
+    alignment: DialogAlignment.Center,
+    offset: { dx: 0, dy: -20 },
+    gridCount: 4,
+    customStyle: false
+  })
+
+
+
   aboutToAppear() {
     if (this.mediaType == '我的视频') {
       this.textFullScreen = false
@@ -52,8 +68,6 @@ struct Play {
     this.controller.pause();
 
     // TODO 同步该视频的播放进度到后台
-
-
   }
 
   build() {
@@ -88,18 +102,19 @@ struct Play {
           .justifyContent(FlexAlign.Center)
 
           Row() {
-            Image($r('app.media.add'))
-              .width(30)
-              .height(30)
-              .onClick(() => {
+            Image($r('app.media.search'))
+              .width(26)
+              .height(26)
+              .margin({right:10})
 
-                // TODO 点击右上角加号自己添加单词到闪卡中
-
-
-              })
           }
           .height(40)
           .width('10%')
+          .onClick(() => {
+            // 点击右上角加号自己搜词
+            this.dialogController_searchMyWord.open()
+
+          })
           //.justifyContent(FlexAlign.Center)
 
         }
@@ -158,7 +173,7 @@ struct Play {
           // 文本全屏or缩回按钮
           Row() {
             Image(this.exchangeFullScreenIcon)
-              .height(25)
+              .height(30)
               .width(40)
           }
           .width('100%')

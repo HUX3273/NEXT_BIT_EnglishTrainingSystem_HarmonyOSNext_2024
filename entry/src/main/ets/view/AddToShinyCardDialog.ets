@@ -1,36 +1,21 @@
-import CryptoJS from '@ohos/crypto-js';
 import http from '@ohos.net.http';
-import CommonConstants from '../common/constants/CommonConstants'
+import CommonConstants from '../common/constants/CommonConstants';
 
-import connection from '@ohos.net.connection';
-import cryptoFramework from '@ohos.security.cryptoFramework';
-import { ShinyCardPictureItem, ShinyCardPictures } from '../viewmodel/ChooseShinyCardPicture';
+import { ShinyCardPictureItem } from '../viewmodel/ChooseShinyCardPicture';
 import promptAction from '@ohos.promptAction';
-import util from '@ohos.util';
 import { AddFlashCardArgs } from '../net/request/AddFlashCardArgs';
+import { FlashCard } from '../model/FlashCard';
+import { UpdateFlashCardArgs } from '../net/request/UpdateFlashCardArgs';
 
 
 @CustomDialog
 export struct AddToShinyCardDialog {
-  private maxPicNum: number = 5;
-  // @State chosenPicSrcArr: Array<string> = [];
   @State selectedIndexArr: Array<number> = [];
-  //@Consume isChosenArr: Array<Boolean>;
-  //@Consume chosenWordIndex: number;
-  controller: CustomDialogController
-  // 若尝试在CustomDialog中传入多个其他的Controller，以实现在CustomDialog中打开另一个或另一些CustomDialog，那么此处需要将指向自己的controller放在最后
-  onCancel() {
-    console.info('====Callback when the first button is clicked')
-    //this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
-  }
-  onAccept() {
-    console.info('====Callback when the second button is clicked')
-    //this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
-  }
 
   @Link word: string; // 单词
   @Link token: string;
-
+  @Link wordId: number
+  @Link isFlashCardExist: Boolean
 
   @State httpPicSrcArr: Array<string> = []; // 存http获取的图片链接
   @State chosenPicSrcArr: Array<string> = []; // 存选中的的图片链接
@@ -41,23 +26,31 @@ export struct AddToShinyCardDialog {
     false, false, false, false, false, false,
     false, false, false, false, false, false,
     false, false, false, false, false, false]; //存http获取的图片链接的选中信息
+  private maxPicNum: number = 5;
 
+  controller: CustomDialogController
+  // 若尝试在CustomDialog中传入多个其他的Controller，以实现在CustomDialog中打开另一个或另一些CustomDialog，那么此处需要将指向自己的controller放在最后
+  onCancel() {
+    console.info('====Callback when the first button is clicked')
+    //this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
+  }
+
+  onAccept() {
+    console.info('====Callback when the second button is clicked')
+    //this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
+  }
 
   async aboutToAppear() {
 
     this.searchImageForFlashCard_HTTP()
+
+    //this.isFlashCardExist_HTTP()
   }
 
-  aboutToDisappear() {
-    // 清空数组
-    // delete this.httpPicSrcArr;
-    // delete this.chosenPicSrcArr;
-    // delete this.isChosenArr;
-  }
 
   build() {
     Column() {
-      Text('添加至闪卡')
+      Text(this.isFlashCardExist ? '更新旧闪卡':'添加新闪卡')
         .fontSize(28)
         .fontWeight(FontWeight.Bold)
         .margin({ top: 20, bottom: 10 })
@@ -98,13 +91,13 @@ export struct AddToShinyCardDialog {
 
                   let isSelectCount = 0
                   // 查已选中的数目 isSelectCount
-                  for (let i = 0;i < this.httpPicSrcArr.length; i++) {
+                  for (let i = 0; i < this.httpPicSrcArr.length; i++) {
                     if (this.isChosenArr[i]) {
                       isSelectCount++
                     }
                   }
 
-                  if (isSelectCount > 5) {
+                  if (isSelectCount > this.maxPicNum) {
                     //item.isChosen = !item.isChosen
                     this.isChosenArr[index] = !this.isChosenArr[index]
 
@@ -118,22 +111,21 @@ export struct AddToShinyCardDialog {
                   if (this.isChosenArr[index] == true) {
                     if (this.chosenPicSrcArr.indexOf(item) == -1) {
                       this.chosenPicSrcArr.push(item) // 向数组中压入选中的图片源
-                      console.info('====压入图片 ' + index + ' ,chosenPicSrcArr：' + this.chosenPicSrcArr)
+                     // console.info('====压入图片 ' + index + ' ,chosenPicSrcArr：' + this.chosenPicSrcArr)
 
                       this.selectedIndexArr.push(index)
-                      console.info('====压入index ' + index + ' ,selectedIndexArr：' + this.selectedIndexArr)
+                     // console.info('====压入index ' + index + ' ,selectedIndexArr：' + this.selectedIndexArr)
                     }
 
                   } else if (this.isChosenArr[index] == false) {
                     if (this.chosenPicSrcArr.indexOf(item) != -1) {
                       this.chosenPicSrcArr.splice(this.chosenPicSrcArr.indexOf(item), 1) // 从数组中弹出取消选中的图片源
-                      console.info('====弹出图片 ' + index + ' ,chosenPicSrcArr：' + this.chosenPicSrcArr)
+                    //  console.info('====弹出图片 ' + index + ' ,chosenPicSrcArr：' + this.chosenPicSrcArr)
 
                       this.selectedIndexArr.splice(this.selectedIndexArr.indexOf(index), 1)
-                      console.info('====弹出index ' + index + ' ,selectedIndexArr：' + this.selectedIndexArr)
+                     // console.info('====弹出index ' + index + ' ,selectedIndexArr：' + this.selectedIndexArr)
                     }
                   }
-
 
 
                 })
@@ -157,6 +149,7 @@ export struct AddToShinyCardDialog {
 
       }
       .height('60%')
+
       //.backgroundColor("#ff60ec15")
 
 
@@ -176,8 +169,13 @@ export struct AddToShinyCardDialog {
           .fontSize(20)
           .onClick(() => {
 
-            // 添加闪卡
-            this.addFlashCard_HTTP(this.chosenPicSrcArr)
+            // 添加闪卡 或 更新闪卡
+            if (this.isFlashCardExist == false) {
+              this.addFlashCard_HTTP(this.chosenPicSrcArr)
+            } else if (this.isFlashCardExist == true) {
+              this.updateFlashCard_HTTP(this.chosenPicSrcArr)
+            }
+
 
             this.onAccept()
 
@@ -198,9 +196,9 @@ export struct AddToShinyCardDialog {
     .height('90%')
     .width("100%")
     .justifyContent(FlexAlign.SpaceBetween)
+
     // dialog默认的borderRadius为24vp，如果需要使用border属性，请和borderRadius属性一起使用。
   }
-
 
   // 取单词相关图片给用户选择
   searchImageForFlashCard_HTTP() {
@@ -209,8 +207,7 @@ export struct AddToShinyCardDialog {
     console.info("==== token:" + this.token)
     let url = CommonConstants.API_HOST + "client/api/flashcard/image/search?keyword=" + this.word
     let httpRequest_searchImageForFlashCard = http.createHttp();
-    httpRequest_searchImageForFlashCard.request(
-      // 请求url地址
+    httpRequest_searchImageForFlashCard.request(// 请求url地址
       url,
       {
         // 请求方式
@@ -239,7 +236,7 @@ export struct AddToShinyCardDialog {
         //this.flashCard = JSON.parse(JSON.parse(json_string))
         //this.httpPicSrcArr[0] = data.result
 
-         this.httpPicSrcArr = JSON.parse(data.result as string)
+        this.httpPicSrcArr = JSON.parse(data.result as string)
 
         console.info("==== 单词可选图片链接：" + this.httpPicSrcArr[0])
 
@@ -249,6 +246,58 @@ export struct AddToShinyCardDialog {
 
   }
 
+  // 检查查闪卡是否存在
+  isFlashCardExist_HTTP() {
+    console.info('==== 添加闪卡前先检查闪卡是否存在')
+
+    // REQUEST
+    let httpRequest_isFlashCardExist = http.createHttp();
+    let url = CommonConstants.API_HOST + "client/api/flashcard/byWord?word=" + this.word
+    httpRequest_isFlashCardExist.request(// 请求url地址
+      url,
+      {
+        // 请求方式
+        method: http.RequestMethod.GET,
+
+        // 可选，默认为60s
+        connectTimeout: 60000,
+        // 可选，默认为60s
+        readTimeout: 60000,
+        // 开发者根据自身业务需要添加header字段
+        header: {
+          'Cookie': 'SESSION_ID=' + this.token,
+          'Content-Type': 'application/json'
+        },
+        // 请求的额外数据。
+        //extraData: addFlashCardArgs
+
+      }, (err, data) => {
+      if (err) {
+        // 请求失嫩
+        console.info("==== isFlashCardExist_HTTP error code:" + err.code)
+        console.info("==== isFlashCardExist_HTTP error message:" + err.message)
+      } else {
+        // 请求成功
+        let json_string = JSON.stringify(data.result)
+        //
+        let flashCardInfo: FlashCard = JSON.parse(JSON.parse(json_string))
+
+        if (flashCardInfo.id == null) {
+          this.isFlashCardExist = false // 调用 addFlashCard_HTTP
+          console.info('==== 该闪卡不存在')
+
+        } else {
+          this.isFlashCardExist = true // 调用 updateFlashCard_HTTP
+          console.info('==== 该闪卡已存在')
+        }
+
+      }
+
+    }
+
+    )
+
+  }
 
   // 添加闪卡（全新单词才能用此接口）
   addFlashCard_HTTP(imagesUrl: Array<string>) {
@@ -258,12 +307,12 @@ export struct AddToShinyCardDialog {
 
 
     // BODY
-    let addFlashCardArgs: string = JSON.stringify(new AddFlashCardArgs(this.word,imagesUrl))
+    let addFlashCardArgs: string = JSON.stringify(new AddFlashCardArgs(this.word, imagesUrl))
 
+    // REQUEST
     let httpRequest_addFlashCard = http.createHttp();
     let url = CommonConstants.API_HOST + "client/api/flashcard"
-    httpRequest_addFlashCard.request(
-      // 请求url地址
+    httpRequest_addFlashCard.request(// 请求url地址
       url,
       {
         // 请求方式
@@ -295,16 +344,16 @@ export struct AddToShinyCardDialog {
         // console.info("==== resultType:" + data.resultType)
         // console.info("==== result:" + data.result)
 
-        if(data.responseCode == 200){
+        if (data.responseCode == 200) {
           console.info("==== 添加闪卡成功！")
           promptAction.showToast({
-            message:"添加闪卡成功！"
+            message: "添加闪卡成功！"
           })
 
         } else {
           console.info("==== 添加闪卡失败")
           promptAction.showDialog({
-            message:"添加失败，请稍后重试......"
+            message: "添加失败，请稍后重试......"
           })
         }
 
@@ -314,10 +363,68 @@ export struct AddToShinyCardDialog {
 
   }
 
-  // TODO 更新闪卡的接口
+  // 更新闪卡的接口
+  updateFlashCard_HTTP(imagesUrl: Array<string>) {
 
 
+    console.info('==== 更新闪卡')
 
 
+    // BODY
+    let updateFlashCardArgs: string = JSON.stringify(new UpdateFlashCardArgs(this.wordId, imagesUrl, true, this.word))
 
+    // REQUEST
+    let httpRequest_addFlashCard = http.createHttp();
+    let url = CommonConstants.API_HOST + "client/api/flashcard"
+    httpRequest_addFlashCard.request(// 请求url地址
+      url,
+      {
+        // 请求方式
+        method: http.RequestMethod.PUT,
+
+        // 可选，默认为60s
+        connectTimeout: 60000,
+        // 可选，默认为60s
+        readTimeout: 60000,
+        // 开发者根据自身业务需要添加header字段
+        header: {
+          'Cookie': 'SESSION_ID=' + this.token,
+          'Content-Type': 'application/json'
+        },
+        // 请求的额外数据。
+        extraData: updateFlashCardArgs
+
+      }, (err, data) => {
+      if (err) {
+        // 请求失嫩
+        console.info("==== updateFlashCard_HTTP error code:" + err.code)
+        console.info("==== updateFlashCard_HTTP error message:" + err.message)
+      } else {
+        // 请求成功
+        // let json_string = JSON.stringify(data.result)
+        //
+        // this.training = JSON.parse(JSON.parse(json_string))
+        // console.info("==== responseCod:" + data.responseCode)
+        // console.info("==== resultType:" + data.resultType)
+        // console.info("==== result:" + data.result)
+
+        if (data.responseCode == 200) {
+          console.info("==== 更新闪卡成功！")
+          promptAction.showToast({
+            message: "更新闪卡成功！"
+          })
+
+        } else {
+          console.info("==== 更新闪卡失败")
+          promptAction.showDialog({
+            message: "更新失败，请稍后重试......"
+          })
+        }
+
+      }
+
+    })
+
+
+  }
 }

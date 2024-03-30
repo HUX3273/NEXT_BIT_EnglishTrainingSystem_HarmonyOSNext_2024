@@ -180,7 +180,7 @@ struct HorizontalItem {
   }
 
   downloadFile_HTTP() {
-    // TODO 根据这个  this.subtitleUrl 链接把字幕文件下载到本地
+    // 根据这个  this.subtitleUrl 链接把字幕文件下载到本地
     console.info('==== 通过URL下载字幕文件')
     let url_download = this.subtitleUrl
     let httpRequest_download = http.createHttp();

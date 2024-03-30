@@ -1,11 +1,9 @@
 import http from '@ohos.net.http';
 import CommonConstants from '../common/constants/CommonConstants';
 
-import { AddToShinyCardDialog } from './AddToShinyCard';
+import { AddToShinyCardDialog } from './AddToShinyCardDialog';
 import { FlashCard } from '../model/FlashCard';
-import prompt from '@ohos.prompt';
 import { promptAction } from '@kit.ArkUI';
-import { TextReader } from './TextReader';
 
 
 @CustomDialog
@@ -15,7 +13,11 @@ export struct WordTranslatorDialog {
   @Consume chosenWordIndex: number;
   @Link word: string; // 单词
   @Link token: string;
+  @State wordId: number = 0;
   @State flashCard: FlashCard = new FlashCard(0, '', '', '', '', '', '', false, [], [], []) //存取到单词的一系列数据
+  @State isWordTranslatable: string = "true";
+  @State isFlashCardExist: Boolean = false;
+  @State isPageLoading: Boolean = true
   // 发音控制器
   pronunciationController: VideoController = new VideoController();
   //新建添加到闪卡的窗口控制器
@@ -24,7 +26,9 @@ export struct WordTranslatorDialog {
       //onCancel: this.onCancel,
       //onAccept: this.onAccept,
       word: $word,
-      token: $token
+      token: $token,
+      wordId: $wordId,
+      isFlashCardExist: $isFlashCardExist
 
     }),
     cancel: this.existApp,
@@ -36,8 +40,7 @@ export struct WordTranslatorDialog {
   })
   // 本窗口自己的控制器（若尝试在CustomDialog中传入多个其他的Controller，以实现在CustomDialog中打开另一个或另一些CustomDialog，那么此处需要将指向自己的controller放在最后）
   controller: CustomDialogController
-  private audioSrc: string = 'http://music.163.com/song/media/outer/url?id=447925558.mp3';
-  private isWordTranslatable: string = "false";
+  scroller: Scroller = new Scroller();
 
   cancel() {
     console.info('====Callback when the first button is clicked')
@@ -54,6 +57,9 @@ export struct WordTranslatorDialog {
     // this.getTranslation();
     this.isWordTranslatable_HTTP()
 
+    this.isFlashCardExist_HTTP()
+
+
   }
 
   // 在自定义组件即将析构销毁时将 dialogController_translator 删除和置空
@@ -63,118 +69,119 @@ export struct WordTranslatorDialog {
   }
 
   build() {
-    Column() {
-
+    Scroll(this.scroller) {
       Column() {
-        Row() {
 
-          Row() {
-            // 单词
-            Text(this.word)
-              .fontSize(30)
-              .fontWeight(FontWeight.Bold)
-              .margin({ left: 20 })
+        if(this.isPageLoading == true){
+          LoadingProgress()
+            .width(50)
+            .height(50)
+            .margin({ top: 30,bottom:30 })
+        }
 
-            // 播放读音
-            Column() {
-              Video({
-                src: this.flashCard.ttsUrl,
-                controller: this.pronunciationController
-              })
-                .width(0)
-                .height(0)
-                .backgroundColor('#000000')
-                .controls(false)
-                .autoPlay(false)
-                .objectFit(ImageFit.Contain)
-                .loop(false)
-                .onError(() => {
-                  promptAction.showToast({
-                    duration: 5000,
-                    message: '请检查网络'
-                  });
-                })
-              Image($r('app.media.pronounce'))
-                .height(35)
-                .width(35)
-                .margin({ left: 10 })
+        if (this.isWordTranslatable == "true" && this.isPageLoading == false) {
+          Column() {
+            Row() {
+              Row() {
+                // 单词
+                Text(this.word)
+                  .fontSize(30)
+                  .fontWeight(FontWeight.Bold)
+                  .margin({ left: 20 })
+
+                // 播放读音
+                Column() {
+                  Video({
+                    src: this.flashCard.ttsUrl,
+                    controller: this.pronunciationController
+                  })
+                    .width(0)
+                    .height(0)
+                    .backgroundColor('#000000')
+                    .controls(false)
+                    .autoPlay(false)
+                    .objectFit(ImageFit.Contain)
+                    .loop(false)
+                    .onError(() => {
+                      promptAction.showToast({
+                        duration: 5000,
+                        message: '请检查网络'
+                      });
+                    })
+                  Image($r('app.media.pronounce'))
+                    .height(35)
+                    .width(35)
+                    .margin({ left: 10 })
+                    .onClick(() => {
+
+                      console.info("==== 发音链接：" + this.flashCard.ttsUrl)
+                      this.pronunciationController.start();
+                    })
+                }
+
+              }
+              .height(60)
+
+
+              // 添加到闪卡
+              Image($r('app.media.add'))
+                .height(25)
+                .width(25)
+                .margin({ top: 10, bottom: 10, right: 20 })
                 .onClick(() => {
 
-                  console.info("==== 发音链接：" + this.flashCard.ttsUrl)
-                  this.pronunciationController.start();
+                  // 弹出闪卡添加窗口
+                  this.dialogController_shinyCard.open()
+
+
                 })
             }
+            .justifyContent(FlexAlign.SpaceBetween)
+            .width("100%")
+
+
+            // 中文释义
+
+            Text(this.flashCard.cnDescription)
+              .fontSize(18)
+              .fontWeight(FontWeight.Medium)
+              .margin({ bottom: 10, left: 20, right: 20 })
+
 
           }
-          .height(60)
+          .alignItems(HorizontalAlign.Start)
+          .width('100%')
 
 
-          // 添加到闪卡
-          Image($r('app.media.add'))
-            .height(25)
-            .width(25)
-            .margin({ top: 10, bottom: 10, right: 20 })
-            .onClick(() => {
-
-              // 弹出闪卡添加窗口
-              this.dialogController_shinyCard.open()
+          // 单词对应的图片
+          Image(this.flashCard.images[0] = '' ? " " : this.flashCard.images[0])
+            .width(300)
+            .height(200)
+            .borderRadius(20)
 
 
-            })
+          // 单词的英文释义
+          Text(this.flashCard.enDescription)
+            .fontSize(18)
+            .fontWeight(FontWeight.Medium)
+            .margin({ top: 10, bottom: 20, left: 20, right: 20 })
+
+
+        } else if (this.isWordTranslatable == "false" && this.isPageLoading == false) {
+
+          Column() {
+            Text("抱歉，没有找到单词 " + this.word + " 对应的翻译哦~")
+              .fontSize(20)
+              .fontWeight(FontWeight.Medium)
+              .margin({ right: 20, left: 20, top: 30, bottom: 30 })
+          }
+          .justifyContent(FlexAlign.Center)
+
         }
-        .justifyContent(FlexAlign.SpaceBetween)
-        .width("100%")
-
-
-        // 中文释义
-        Text(this.flashCard.cnDescription)
-          .fontSize(18)
-          .fontWeight(FontWeight.Medium)
-          .margin({ bottom: 10, left: 20, right: 20 })
-
 
       }
-      .alignItems(HorizontalAlign.Start)
-      .width('100%')
-
-
-      // 单词对应的图片
-      Image(this.flashCard.images[0] = '' ? " ":this.flashCard.images[0])
-        .width(300)
-        .height(200)
-        .borderRadius(20)
-
-
-      // 单词的英文释义
-      Text(this.flashCard.enDescription)
-        .fontSize(18)
-        .fontWeight(FontWeight.Medium)
-        .margin({ top: 10, bottom: 20, left: 20, right: 20 })
-      // TextReader({
-      //   subtitleText: this.flashCard.enDescription,
-      //   fontSize: 18,
-      //   fontWeight:FontWeight.Medium
-      // })
-      //   .margin({ top: 10, bottom: 20, left: 20, right: 20 })
-
-
-      // // 确认取消键
-      // Flex({ justifyContent: FlexAlign.SpaceAround }) {
-      //   Button('onCancel')
-      //     .onClick(() => {
-      //       this.controller.close()
-      //       this.onCancel()
-      //     }).backgroundColor(0xffffff).fontColor(Color.Black)
-      //   Button('confirm')
-      //     .onClick(() => {
-      //       this.controller.close()
-      //       this.confirm()
-      //     }).backgroundColor(0xffffff).fontColor(Color.Red)
-      // }.margin({ bottom: 10 })
-
-
+      .width("100%")
     }
-    .width("100%")
 
     // dialog默认的borderRadius为24vp，如果需要使用border属性，请和borderRadius属性一起使用。
   }
@@ -213,6 +220,8 @@ export struct WordTranslatorDialog {
         // 请求成功
         this.isWordTranslatable = data.result as string
         console.info("==== 能否翻译：" + this.isWordTranslatable)
+
+        this.isPageLoading = false
 
         if (this.isWordTranslatable == "true") {
           this.translateWord_HTTP()
@@ -261,11 +270,84 @@ export struct WordTranslatorDialog {
 
         this.flashCard = JSON.parse(JSON.parse(json_string))
 
+        this.wordId = this.flashCard.id
+
         console.info("==== 单词相关数据：" + this.flashCard.cnDescription)
 
 
       }
     })
+
+  }
+
+  // 检查查闪卡是否存在
+  isFlashCardExist_HTTP() {
+    console.info('==== 添加闪卡前先检查闪卡是否存在')
+
+    // REQUEST
+    let httpRequest_isFlashCardExist = http.createHttp();
+    let url = CommonConstants.API_HOST + "client/api/flashcard/byWord?word=" + this.word
+    httpRequest_isFlashCardExist.request(// 请求url地址
+      url,
+      {
+        // 请求方式
+        method: http.RequestMethod.GET,
+
+        // 可选，默认为60s
+        connectTimeout: 60000,
+        // 可选，默认为60s
+        readTimeout: 60000,
+        // 开发者根据自身业务需要添加header字段
+        header: {
+          'Cookie': 'SESSION_ID=' + this.token,
+          'Content-Type': 'application/json'
+        },
+        // 请求的额外数据。
+        //extraData: addFlashCardArgs
+
+      }, (err, data) => {
+      if (err) {
+        // 请求失嫩
+        console.info("==== isFlashCardExist_HTTP error code:" + err.code)
+        console.info("==== isFlashCardExist_HTTP error message:" + err.message)
+      } else {
+        // 请求成功
+        let json_string = JSON.stringify(data.result)
+        //
+        let flashCardInfo: FlashCard = JSON.parse(JSON.parse(json_string))
+
+        if (flashCardInfo.id == null) {
+          this.isFlashCardExist = false // 调用 addFlashCard_HTTP
+          console.info('==== 该闪卡不存在')
+
+        } else {
+          this.isFlashCardExist = true // 调用 updateFlashCard_HTTP
+          console.info('==== 该闪卡已存在')
+        }
+
+      }
+
+    }
+
+    )
+
+  }
+
+  // 闪卡添加界面点击了取消
+  public onCancel() {
+    console.info('====Callback when the first button is clicked')
+    this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
+  }
+
+  // 闪卡添加界面点击了确认添加
+  public onAccept() {
+    console.info('====Callback when the second button is clicked')
+    this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
+  }
+
+  public existApp() {
+    console.info('====Click the callback in the blank area')
+    this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
 
   }
 
@@ -336,21 +418,4 @@ export struct WordTranslatorDialog {
   // }
 
 
-  // 闪卡添加界面点击了取消
-  public onCancel() {
-    console.info('====Callback when the first button is clicked')
-    this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
-  }
-
-  // 闪卡添加界面点击了确认添加
-  public onAccept() {
-    console.info('====Callback when the second button is clicked')
-    this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
-  }
-
-  public existApp() {
-    console.info('====Click the callback in the blank area')
-    this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
-
-  }
 }
