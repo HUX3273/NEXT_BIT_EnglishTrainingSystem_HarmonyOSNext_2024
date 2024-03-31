@@ -90,12 +90,26 @@ struct HorizontalItem {
   build() {
     Column() {
       Flex(){
-        Image(this.coverImgSrc)
+
+        if(this.coverImgSrc == ''|| this.coverImgSrc == null){
+          Column(){
+            Image(  $r("app.media.book") )
+          }
           .width(150)
           .height(104)
-          .margin({ left: 8, right: 5 })
           .borderRadius(24)
-          .backgroundColor("#ffd0d0d0")
+          .margin({ left: 8, right: 5 })
+        } else {
+
+          Image(  this.coverImgSrc )
+            .width(150)
+            .height(104)
+            .margin({ left: 8, right: 5 })
+            .borderRadius(24)
+
+        }
+
+
         Text(this.bookName)
           .margin({
             top: 12,

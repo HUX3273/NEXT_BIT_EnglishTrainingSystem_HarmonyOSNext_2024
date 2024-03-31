@@ -293,6 +293,7 @@ struct LoginPage {
         // 数据持久化
         PreferencesUtil.saveUserName(this.userInfo.childrenName)
         PreferencesUtil.saveToken(this.token)
+        PreferencesUtil.saveUserID(this.userInfo.id.toString())
 
 
       }

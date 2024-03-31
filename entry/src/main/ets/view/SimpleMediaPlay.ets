@@ -1,12 +1,12 @@
 import router from '@ohos.router';
-import { VideoPlayer } from '../view/MediaPlayer';
+import { VideoPlayer } from './MediaPlayer';
 import util from '@ohos.util';
-import { TextReader } from '../view/TextReader';
+import { TextReader } from './TextReader';
 import { Training } from '../model/Training';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import http from '@ohos.net.http';
 import CommonConstants from '../common/constants/CommonConstants';
-import { SearchMyWordDialog } from '../view/SearchMyWordDialog';
+import { SearchMyWordDialog } from './SearchMyWordDialog';
 
 
 @Entry

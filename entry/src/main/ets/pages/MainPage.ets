@@ -14,6 +14,7 @@ struct MainPage {
   @State message: string = 'Hello World'
   @State userName: string = ''
   @State token: string = ''
+  @State userID:string = ''
 
 
   pageJump(desPage: String): void {
@@ -34,6 +35,9 @@ struct MainPage {
       this.token = value
     });
 
+    await PreferencesUtil.getUserID().then((value) => {
+      this.userID = value
+    });
 
   }
 
@@ -67,6 +71,10 @@ struct MainPage {
               // 跳转到排名页面
               router.pushUrl({
                 url: 'pages/RankPage',
+                params:{
+                  token:this.token,
+                  userID:this.userID
+                }
               });
             })
 
@@ -165,6 +173,7 @@ struct MainPage {
           //console.info('====测试：' + simpleName)
           router.pushUrl({
             url: 'pages/TestPage',
+
           });
         })
 

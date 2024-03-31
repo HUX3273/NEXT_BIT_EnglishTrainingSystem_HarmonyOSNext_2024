@@ -53,14 +53,14 @@ struct PdfBookReader {
     console.info("==== PdfBookReader scr:" + this.bookSrc)
     this.pdfUrl = this.bookSrc
 
-    // TODO 开始计时
+    // 开始计时
     this.startRecord_HTTP()
 
   }
 
   async aboutToDisappear(){
 
-    // TODO 结束计时
+    // 结束计时
     this.endRecord_HTTP()
 
   }

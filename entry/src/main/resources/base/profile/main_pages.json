@@ -5,7 +5,7 @@
     "pages/TestPage",
     "pages/RankPage",
     "pages/WebPage",
-    "pages/SimpleMediaPlay",
+    "view/SimpleMediaPlay",
     "pages/study_pages/MouthPage",
     "pages/study_pages/EyePage",
     "pages/study_pages/ShinyCardPage",

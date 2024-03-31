@@ -23,6 +23,7 @@ const PREFERENCES_NAME = 'myPreferences';   // 首选项名字
 // 首选项Key字段
 const KEY_APP_FONT_SIZE = 'appFontSize';
 const KEY_USER_NAME = 'userName';
+const KEY_USER_ID = 'userID';
 const KEY_TOKEN = 'token'
 
 
@@ -50,7 +51,7 @@ export class PreferencesUtil {
   ////////////////////////////////////////         在应用创建时给数据默认值           ////////////////////////////////////////
 
   // 通过has方法判断首选项中是否包含指定的key，保证指定的key不会被重复保存
-  saveDefaultAll(fontSize: number,userName: string,token: string) {
+  saveDefaultAll(fontSize: number,userName: string,token: string,userID: string) {
     let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
     getAllPreferences().then((preferences: dataPreferences.Preferences) => {
       // 判断保存的key是否存在
@@ -88,6 +89,20 @@ export class PreferencesUtil {
         Logger.error(TAG, '==== Has the value failed with err: ' + err);
       });
 
+
+      // 保存userID
+      preferences.has(KEY_USER_ID).then(async (isExist: boolean) => {
+        Logger.info(TAG, '==== preferences has userID is ' + isExist);
+        if (!isExist) {
+          await preferences.put(KEY_USER_ID, userID);
+          preferences.flush();
+        }
+      }).catch((err: Error) => {
+        Logger.error(TAG, '==== Has the value failed with err: ' + err);
+      });
+
+
+
     }).catch((err: Error) => {
       Logger.error(TAG, '==== Get the preferences failed, err: ' + err.message);
     });
@@ -109,7 +124,7 @@ export class PreferencesUtil {
       // 数据持久化
       preferences.flush();
     }).catch((err: Error) => {
-      Logger.error(TAG, '====put the preferences failed, err: ' + err);
+      Logger.error(TAG, '==== put the preferences failed, err: ' + err);
     });
   }
 
@@ -121,7 +136,7 @@ export class PreferencesUtil {
       // 数据持久化
       preferences.flush();
     }).catch((err: Error) => {
-      Logger.error(TAG, '====put the preferences failed, err: ' + err);
+      Logger.error(TAG, '==== put the preferences failed, err: ' + err);
     });
   }
 
@@ -133,7 +148,20 @@ export class PreferencesUtil {
       // 数据持久化
       preferences.flush();
     }).catch((err: Error) => {
-      Logger.error(TAG, '====put the preferences failed, err: ' + err);
+      Logger.error(TAG, '==== put the preferences failed, err: ' + err);
+    });
+  }
+
+
+  saveUserID(userID: string){
+    let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
+    getAllPreferences().then(async (preferences: dataPreferences.Preferences) => {
+      // 保存 userID 数据
+      await preferences.put(KEY_USER_ID, userID);
+      // 数据持久化
+      preferences.flush();
+    }).catch((err: Error) => {
+      Logger.error(TAG, '==== put the preferences failed, err: ' + err);
     });
   }
 
@@ -162,6 +190,12 @@ export class PreferencesUtil {
     return token;
   }
 
+  async getUserID() {
+    let userID: string = '';
+    let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
+    userID = await (await getAllPreferences()).get(KEY_USER_ID, userID);
+    return userID;
+  }
 
   ////////////////////////////////////////         删除数据           ////////////////////////////////////////
 
@@ -171,9 +205,9 @@ export class PreferencesUtil {
     const preferences: dataPreferences.Preferences = await getAllPreferences();
     let deleteValue = preferences.delete(KEY_APP_FONT_SIZE);
     deleteValue.then(() => {
-      Logger.info(TAG, '====Succeeded in deleting the key appFontSize.');
+      Logger.info(TAG, '==== Succeeded in deleting the key appFontSize.');
     }).catch((err: Error) => {
-      Logger.error(TAG, '====Failed to delete the key appFontSize. Cause: ' + err);
+      Logger.error(TAG, '==== Failed to delete the key appFontSize. Cause: ' + err);
     });
   }
   async deleteUserName() {
@@ -181,9 +215,9 @@ export class PreferencesUtil {
     const preferences: dataPreferences.Preferences = await getAllPreferences();
     let deleteValue = preferences.delete(KEY_USER_NAME);
     deleteValue.then(() => {
-      Logger.info(TAG, '====Succeeded in deleting the key userName.');
+      Logger.info(TAG, '==== Succeeded in deleting the key userName.');
     }).catch((err: Error) => {
-      Logger.error(TAG, '====Failed to delete the key userName. Cause: ' + err);
+      Logger.error(TAG, '==== Failed to delete the key userName. Cause: ' + err);
     });
   }
   async deleteToken() {
@@ -191,9 +225,19 @@ export class PreferencesUtil {
     const preferences: dataPreferences.Preferences = await getAllPreferences();
     let deleteValue = preferences.delete(KEY_TOKEN);
     deleteValue.then(() => {
-      Logger.info(TAG, '====Succeeded in deleting the key token.');
+      Logger.info(TAG, '==== Succeeded in deleting the key token.');
     }).catch((err: Error) => {
-      Logger.error(TAG, '====Failed to delete the key token. Cause: ' + err);
+      Logger.error(TAG, '==== Failed to delete the key token. Cause: ' + err);
+    });
+  }
+  async deleteUserID() {
+    let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
+    const preferences: dataPreferences.Preferences = await getAllPreferences();
+    let deleteValue = preferences.delete(KEY_USER_ID);
+    deleteValue.then(() => {
+      Logger.info(TAG, '==== Succeeded in deleting the key UserID.');
+    }).catch((err: Error) => {
+      Logger.error(TAG, '==== Failed to delete the key UserID. Cause: ' + err);
     });
   }
 

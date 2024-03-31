@@ -113,12 +113,34 @@ struct HorizontalItem {
 
       } else {
         Flex() {
-          Image(this.imageSrc)
-            .width(150)
-            .height(104)
-            .margin({ left: 8, right: 5 })
-            .borderRadius(24)
-            .backgroundColor("#ffaeabab")
+
+          if(this.imageSrc == ''|| this.imageSrc == null){
+            if(this.mediaType == "我的视频" ){
+            Image( $r("app.media.video"))
+              .width(150)
+              .height(104)
+              .margin({ left: 8, right: 5 })
+              .borderRadius(24)
+
+            }else  if(this.mediaType == "我的音频" ){
+              Image( $r("app.media.audio"))
+                .width(150)
+                .height(104)
+                .margin({ left: 8, right: 5 })
+                .borderRadius(24)
+            }
+
+
+          } else {
+            Image(this.imageSrc)
+              .width(150)
+              .height(104)
+              .margin({ left: 8, right: 5 })
+              .borderRadius(24)
+
+          }
+
+
           Text(this.mediaName)
             .margin({
               top: 12,
@@ -137,7 +159,7 @@ struct HorizontalItem {
     .onClick(() => {
       // 点击后播放对应影片
       router.pushUrl({
-        url: 'pages/SimpleMediaPlay',
+        url: 'view/SimpleMediaPlay',
         params: {
           mediaSrc: this.mediaSrc,
           mediaName: this.mediaName,
@@ -153,7 +175,7 @@ struct HorizontalItem {
 
   getSubtitle_HTTP() {
     console.info('==== 获取该视频/音频字幕文件URL')
-    console.info('==== token:' + this.token)
+    //console.info('==== token:' + this.token)
     let url = CommonConstants.API_HOST + "client/api/userFile/subtitle/" + this.mediaId
 
     let httpRequest_getSubtitle = http.createHttp();
