@@ -1,12 +1,9 @@
 import MainViewModel from '../viewmodel/MainViewModel';
-import ItemData from '../viewmodel/MainPageGrid';
 import MainPageGrid from '../viewmodel/MainPageGrid';
 import router from '@ohos.router';
 import PreferencesUtil from '../common/database/PreferencesUtil';
-import promptAction from '@ohos.promptAction';
 import CommonConstants from '../common/constants/CommonConstants';
 import http from '@ohos.net.http';
-import { GetTrainingListArgs } from '../net/request/GetTrainingListArgs';
 
 @Entry
 @Component
@@ -14,14 +11,14 @@ struct MainPage {
   @State message: string = 'Hello World'
   @State userName: string = ''
   @State token: string = ''
-  @State userID:string = ''
-
+  @State userID: string = ''
+  @State avatar: string = ''
 
   pageJump(desPage: String): void {
     router.pushUrl({
       url: 'pages/study_pages/' + desPage,
-      params:{
-        token:this.token
+      params: {
+        token: this.token
       }
     });
   }
@@ -44,20 +41,51 @@ struct MainPage {
   build() {
     Column() {
       Row() {
-        //TODO 显示用户头像
         Row() {
-          Image($r('app.media.user_default'))
-            .width(70)
-            .height(70)
-            .margin({ top: 50, left: '10%' })
+          Stack() {
+            Row() {
+              Stack() {
+                //TODO 显示用户头像
+                Image($r('app.media.user_default'))
+                  .height(67)
+                  .width(67)
+                  .borderRadius(40)
+                  .zIndex(2)
+                Text()
+                  .height(75)
+                  .width(75)
+                  .backgroundColor("#ffffff")
+                  .borderRadius(40)
+                  .zIndex(0)
+              }
+            }
+            .borderRadius(40)
+            .zIndex(2)
 
-          // 显示用户名
-          Text(this.userName)
-            .fontSize(25)
-            .fontWeight(FontWeight.Bold)
-            .margin({ top: 50, left: 20 })
+            Row() {
+              Row() {
+                // 名字
+                Text(this.userName)
+                  .fontSize(16)
+                  .fontWeight(FontWeight.Medium)
+                  .textAlign(TextAlign.Start)
+              }
+              .width('50%')
+            }
+            .justifyContent(FlexAlign.End)
+            .height(57)
+            .borderRadius(40)
+            .width('100%')
+            .backgroundColor('#FFAA43')
+            .zIndex(0)
+          }
+          .width('90%')
+          .margin({ top: 50,left:'10%'})
+          .alignContent(Alignment.Start)
+
         }
         .width('50%')
+        //.backgroundColor('#1fffff')
 
 
         Row() {
@@ -71,9 +99,9 @@ struct MainPage {
               // 跳转到排名页面
               router.pushUrl({
                 url: 'pages/RankPage',
-                params:{
-                  token:this.token,
-                  userID:this.userID
+                params: {
+                  token: this.token,
+                  userID: this.userID
                 }
               });
             })
@@ -188,11 +216,10 @@ struct MainPage {
         })
 
     }
+
     .height('100%')
     .width('100%')
-
   }
-
 
   // 在后台把本token注销
   logout_HTTP() {
@@ -201,8 +228,7 @@ struct MainPage {
     let url = CommonConstants.API_HOST + "client/api/logout"
 
     let httpRequest_logout = http.createHttp();
-    httpRequest_logout.request(
-      // 请求url地址
+    httpRequest_logout.request(// 请求url地址
       url,
       {
         // 请求方式
@@ -236,5 +262,4 @@ struct MainPage {
       }
     })
   }
-
 }
