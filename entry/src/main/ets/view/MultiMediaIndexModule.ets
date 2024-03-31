@@ -69,7 +69,10 @@ export struct MultiMediaModule {
 }
 
 
-//
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 @Component
 struct HorizontalItem {
   private imageSrc: string = '';
@@ -222,6 +225,8 @@ struct HorizontalItem {
         //请求失嫩
         console.info("==== downloadFile_HTTP error code:" + err.code)
         console.info("==== downloadFile_HTTP error message:" + err.message)
+
+
       } else {
 
 
@@ -247,11 +252,10 @@ struct HorizontalItem {
             console.info('==== 字幕：' + this.subtitleText.substring(0, 100))
         }
 
-
-        this.isPageLoading = false
-
       }
     })
+
+    this.isPageLoading = false
 
   }
 }

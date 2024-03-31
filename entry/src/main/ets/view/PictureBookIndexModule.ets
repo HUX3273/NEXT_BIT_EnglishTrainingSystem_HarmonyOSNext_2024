@@ -37,6 +37,8 @@ export struct PictureBookModule {
               coverImgSrc: item.coverOssPath,
               bookSrc: item.clientUserResourceFile.ossPath,
               bookName: item.clientUserResourceFile.fileName,
+              token:this.token,
+              srcId:item.clientUserResourceFile.id
             })
           }
           .margin({ left: 8, right: 8, bottom: 10 })
@@ -67,15 +69,20 @@ export struct PictureBookModule {
 @Component
 struct HorizontalItem {
   private coverImgSrc: string = '';
-  private bookSrc: string = '';
-  private bookSrcArr:Array<string> = ['']
+  private bookSrc: string = ''; // PDF
+  private bookSrcArr:Array<string> = [''] // PHOTO
   private bookName: string = '';
-  public token: string = '';
   @State isPageLoading: Boolean = true
+
+
+  public token: string = '';
+  public srcId:number = -1;
+
 
 
   async aboutToAppear() {
 
+    console.info("==== token:"+this.token)
     this.bookSrcArr[0] = this.bookSrc
 
   }
@@ -104,14 +111,34 @@ struct HorizontalItem {
     .justifyContent(FlexAlign.Center)
     .onClick(() => {
       // 点击后打开绘本
-      router.pushUrl({
-        url: 'pages/PictureBookReader',
-        params: {
-          coverImgSrc: this.coverImgSrc,
-          bookSrc: this.bookSrcArr,
-          bookName: this.bookName
-        }
-      });
+
+      if(this.bookSrcArr.length == 1){
+        console.info("==== 绘本链接："+this.bookSrc)
+        // PDF
+        router.pushUrl({
+          url: 'view/PdfBookReader',
+          params: {
+            coverImgSrc: this.coverImgSrc,
+            bookSrc:this.bookSrc,
+            bookName: this.bookName,
+            token:this.token,
+            srcId:this.srcId
+          }
+        })
+      } else  if(this.bookSrcArr.length != 1){
+        // PHOTO
+        router.pushUrl({
+          url: 'view/PhotoBookReader',
+          params: {
+            coverImgSrc: this.coverImgSrc,
+            bookSrc: this.bookSrc,
+            bookName: this.bookName,
+            token:this.token,
+            srcId:this.srcId
+          }
+        })
+      }
+
 
     })
   }

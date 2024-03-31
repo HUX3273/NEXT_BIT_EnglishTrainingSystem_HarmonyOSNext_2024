@@ -13,7 +13,7 @@
     "@ohos/imageviewzoom": "^2.0.1",
     "@ohos/crypto-js": "^2.0.3",
     "@ohos/lottie": "^2.0.9",
-    "@ohos/axios": "^2.2.0"
+    "@ohos/axios": "^2.2.0",
   },
   "dynamicDependencies": {}
 }

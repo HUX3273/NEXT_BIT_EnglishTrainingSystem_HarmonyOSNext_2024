@@ -21,7 +21,6 @@ struct Index {
       Row() {
         Button('pdfjs http')
           .onClick(async () => {
-            console.info("==== 您点击了按钮 pdfjs http")
             try {
               this.pdfUrl = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';
               this.interceptedUrl = url.URL.parseURL(this.pdfUrl).origin;
