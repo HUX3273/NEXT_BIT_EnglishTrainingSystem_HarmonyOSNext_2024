@@ -95,7 +95,8 @@ struct MainPage {
                     fontColor: '#D94838',
                     action: () => {
                       console.info('====确认登出');
-                      this.logout_HTTP()
+                      // TODO 测试时暂时不注销token
+                      //this.logout_HTTP()
                       // 跳转登出页面
                       router.replaceUrl({
                         url: 'pages/LoginPage',
@@ -160,19 +161,22 @@ struct MainPage {
       // 测试按钮
       Button('TestPage entrance')
         .onClick(() => {
-
           //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
-
           //console.info('====测试：' + simpleName)
-
           router.pushUrl({
             url: 'pages/TestPage',
-
           });
-
-
         })
 
+      // 网页按钮
+      Button('WebPage entrance')
+        .onClick(() => {
+          //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
+          //console.info('====测试：' + simpleName)
+          router.pushUrl({
+            url: 'pages/WebPage',
+          });
+        })
 
     }
     .height('100%')

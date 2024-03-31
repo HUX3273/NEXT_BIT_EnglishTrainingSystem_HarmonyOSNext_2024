@@ -1,5 +1,6 @@
 import router from '@ohos.router';
 import prompt from '@ohos.prompt';
+import web_webview from '@ohos.web.webview';
 
 @Entry
 @Component
@@ -27,6 +28,9 @@ struct PictureBookReader {
   private swiperController: SwiperController = new SwiperController()
 
   bigScroller:Scroller = new Scroller()
+
+  webviewController: web_webview.WebviewController = new web_webview.WebviewController();
+
 
   build() {
     Column() {
@@ -74,10 +78,9 @@ struct PictureBookReader {
       .justifyContent(FlexAlign.SpaceBetween)
 
 
-      // 绘本画布区
-
-
-      // List({ scroller: this.bigScroller, initialIndex: 0 }){
+      // 绘本区
+       if(this.bookSrc.length != 1){ // 图片绘本
+       // List({ scroller: this.bigScroller, initialIndex: 0 }){
       //   ForEach(this.bookSrc, (item, index) => {
       //     ListItem(){
       //       Image(item)
@@ -127,9 +130,6 @@ struct PictureBookReader {
       // }
       // .listDirection(Axis.Horizontal)
       // .height('75%')
-
-
-
       Swiper(this.swiperController) {
         ForEach(this.bookSrc, (item:string, index) => {
           Image(item)
@@ -201,8 +201,6 @@ struct PictureBookReader {
         }
       })
 
-
-
       // 底部图片滚轮
       List({ space: 10, initialIndex: 0 }) {
         ForEach(this.bookSrc, (item:string, indexTarget) => {
@@ -253,9 +251,17 @@ struct PictureBookReader {
       .height(this.barHeight)
 
 
+       } else if(this.bookSrc.length == 1){
 
-
-      // todo PDF阅读器
+         // PDF阅读
+        Web({
+          // 把要展示的文件放到 entry/src/main/resources/rawfile/test.pdf
+          src: this.bookSrc[0],
+          controller: this.webviewController
+        })
+          // 这行是关键，不加这行只能看到灰色的页面
+          .domStorageAccess(true)
+      }
 
 
 
