@@ -4,34 +4,30 @@ import { Rank } from '../model/Rank';
 export default struct RankListItem {
   private rankItem: Rank = new Rank(-1, '', '', -1, -1, false)
   public index: number = 0;
-
-  brandColor:string = '#F8F8F8'
-
-  rankColor:string = '#EFEFEF'
-  rankNumberColor:string = '#000000'
-
-  fontColor:string = '#000000'
+  brandColor: string = '#F8F8F8'
+  rankColor: string = '#EFEFEF'
+  rankNumberColor: string = '#000000'
+  fontColor: string = '#000000'
 
   aboutToAppear(): void {
 
-    if(this.rankItem.isMe == true){
+    if (this.rankItem.isMe == true) {
       this.brandColor = '#FFAA43'
       this.fontColor = '#ffffff'
     }
 
-    if(this.rankItem.rankNo == 1){
+    if (this.rankItem.rankNo == 1) {
       this.rankColor = '#EAC76F'
       this.rankNumberColor = '#ffffff'
-    } else  if(this.rankItem.rankNo == 2){
+    } else if (this.rankItem.rankNo == 2) {
       this.rankColor = '#C1C1C1'
       this.rankNumberColor = '#ffffff'
-    } else if(this.rankItem.rankNo == 3){
+    } else if (this.rankItem.rankNo == 3) {
       this.rankColor = '#ffd0936c'
       this.rankNumberColor = '#ffffff'
     }
 
   }
-
 
   build() {
     Row() {
@@ -61,7 +57,7 @@ export default struct RankListItem {
         Row() {
           Row() {
             // 排名
-            Stack(){
+            Stack() {
               Text()
                 .height(30)
                 .width(30)
@@ -77,12 +73,12 @@ export default struct RankListItem {
 
 
             // 名字
-              Text(this.rankItem.childName)
-                .fontSize(16)
-                .fontColor(this.fontColor)
-                .fontWeight(FontWeight.Medium)
-                .textAlign(TextAlign.Start)
-                .margin({left:10})
+            Text(this.rankItem.childName)
+              .fontSize(16)
+              .fontColor(this.fontColor)
+              .fontWeight(FontWeight.Medium)
+              .textAlign(TextAlign.Start)
+              .margin({ left: 10 })
 
           }
           .width('55%')
@@ -92,9 +88,12 @@ export default struct RankListItem {
             Image($r('app.media.clock'))
               .height(25)
               .width(25)
-            Text(this.rankItem.duration.toString() + '秒')
+
+            Text((this.rankItem.duration / 60).toString() + 'min')
               .fontColor(this.fontColor)
               .margin({ left: 10, right: 10 })
+
+
           }
           .width('25%')
         }
