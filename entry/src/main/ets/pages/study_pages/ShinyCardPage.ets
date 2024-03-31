@@ -9,6 +9,9 @@ import { FlashCard } from '../../model/FlashCard';
 import { ReviewFlashCardArgs } from '../../net/request/ReviewFlashCardArgs';
 import { promptAction } from '@kit.ArkUI';
 import { TextReader } from '../../view/TextReader';
+import { StudyRecord } from '../../model/StudyRecord';
+import { StartRecordArgs } from '../../net/request/StartRecordArgs';
+import { EndRecordArgs } from '../../net/request/EndRecordArgs';
 
 @Entry
 @Component
@@ -37,13 +40,28 @@ struct ShinyCardPage {
     });
   }
 
+
+
+  private srcId:number = -1;
+  private recordId:number = -1
+  studyRecord:StudyRecord = new StudyRecord(-1)
+
   async aboutToAppear() {
 
     this.reviewedCount = 0
     this.pageIndex = 0;
     this.getFlashCardStudyList_HTTP()
 
+
   }
+
+
+  aboutToDisappear() {
+
+    this.endRecord_HTTP()
+
+  }
+
 
   build() {
     Column() {
@@ -359,6 +377,7 @@ struct ShinyCardPage {
 
         this.pageIsLoading = false
 
+        this.startRecord_HTTP()
 
         // console.info("==== LIST result:" + this.studyList.flashcards[0].id)
         // console.info("==== LIST result:"+this.training[0].clientUser.nickname)
@@ -369,6 +388,7 @@ struct ShinyCardPage {
       }
 
     })
+
 
   }
 
@@ -423,6 +443,119 @@ struct ShinyCardPage {
 
 
   }
+
+
+
+
+  startRecord_HTTP(){
+    console.info('==== 开始学习计时')
+
+    let startRecordArgs: string = JSON.stringify(new StartRecordArgs("FLASH_CARD",this.studyList.flashcards[this.pageIndex].id,"test-studySessionNo-FLASH_CARD"))
+
+    let httpRequest_startRecord = http.createHttp();
+    let url = CommonConstants.API_HOST + "client/api/studyRecord/startRecord"
+    httpRequest_startRecord.request(
+      // 请求url地址
+      url,
+      {
+        // 请求方式
+        method: http.RequestMethod.POST,
+
+        // 可选，默认为60s
+        connectTimeout: 60000,
+        // 可选，默认为60s
+        readTimeout: 60000,
+        // 开发者根据自身业务需要添加header字段
+        header: {
+          'Cookie': 'SESSION_ID=' + this.token,
+          'Content-Type': 'application/json'
+        },
+        // 请求的额外数据
+        extraData: startRecordArgs
+
+      }, (err, data) => {
+      if (err) {
+        // 请求失嫩
+        console.info("==== startRecord_HTTP error code:" + err.code)
+        console.info("==== startRecord_HTTP error message:" + err.message)
+      } else {
+        // 请求成功
+        //
+        let json_string = JSON.stringify(data.result)
+        console.info("==== startRecord_HTTP result:"+ json_string)
+        if(data.responseCode == 200){
+          console.info("==== 开始学习计时成功！")
+
+          this.studyRecord  = JSON.parse(JSON.parse(json_string))
+
+          this.recordId = this.studyRecord.id
+        } else {
+          console.info("==== 开始学习计时失败！")
+        }
+
+
+      }
+
+    })
+
+  }
+
+
+  endRecord_HTTP(){
+    console.info('==== 结束学习计时')
+
+    let endRecordArgs: string = JSON.stringify(new EndRecordArgs(this.recordId,0))
+
+    let httpRequest_endRecord = http.createHttp();
+    let url = CommonConstants.API_HOST + "client/api/studyRecord/endRecord"
+    httpRequest_endRecord.request(
+      // 请求url地址
+      url,
+      {
+        // 请求方式
+        method: http.RequestMethod.POST,
+
+        // 可选，默认为60s
+        connectTimeout: 60000,
+        // 可选，默认为60s
+        readTimeout: 60000,
+        // 开发者根据自身业务需要添加header字段
+        header: {
+          'Cookie': 'SESSION_ID=' + this.token,
+          'Content-Type': 'application/json'
+        },
+        // 请求的额外数据
+        extraData: endRecordArgs
+
+      }, (err, data) => {
+      if (err) {
+        // 请求失嫩
+        console.info("==== endRecord_HTTP error code:" + err.code)
+        console.info("==== endRecord_HTTP error message:" + err.message)
+      } else {
+        // 请求成功
+
+        let json_string = JSON.stringify(data.result)
+        console.info("==== endRecord_HTTP result:"+ json_string)
+        if(data.responseCode == 200){
+          console.info("==== 结束学习计时成功！")
+
+          // this.getFlashCardStudyList_HTTP()
+
+        } else {
+          console.info("==== 结束学习计时失败！")
+        }
+
+
+      }
+
+    })
+  }
+
+
+
+
+
 
 
 }

@@ -132,7 +132,7 @@ struct PdfBookReader {
 
       Stack(){
 
-        Text("阅读时间：")
+        Text("")
           .width("100%")
           .height(33)
           .backgroundColor("#ffffff")
@@ -188,9 +188,6 @@ struct PdfBookReader {
       .alignContent(Alignment.TopStart)
 
 
-
-
-
     }
   }
 
@@ -199,7 +196,7 @@ struct PdfBookReader {
   startRecord_HTTP(){
     console.info('==== 开始学习计时')
 
-    let startRecordArgs: string = JSON.stringify(new StartRecordArgs("PICTURE_BOOK",this.srcId ,"test-studySessionNo"))
+    let startRecordArgs: string = JSON.stringify(new StartRecordArgs("PICTURE_BOOK",this.srcId ,"test-studySessionNo-PICTURE_BOOK"))
 
     let httpRequest_startRecord = http.createHttp();
     let url = CommonConstants.API_HOST + "client/api/studyRecord/startRecord"

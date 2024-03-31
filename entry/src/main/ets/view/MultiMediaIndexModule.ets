@@ -165,8 +165,10 @@ struct HorizontalItem {
           mediaName: this.mediaName,
           mediaType: this.mediaType,
           mediaId: this.mediaId,
+          subtitleText: this.subtitleText,
           token: this.token,
-          subtitleText: this.subtitleText
+          srcId:this.mediaId,
+
         } });
     })
 
