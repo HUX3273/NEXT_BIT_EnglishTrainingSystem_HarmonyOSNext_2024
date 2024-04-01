@@ -294,6 +294,7 @@ struct LoginPage {
         PreferencesUtil.saveUserName(this.userInfo.childrenName)
         PreferencesUtil.saveToken(this.token)
         PreferencesUtil.saveUserID(this.userInfo.id.toString())
+        PreferencesUtil.saveAvatar(this.userInfo.avatar)
 
 
       }

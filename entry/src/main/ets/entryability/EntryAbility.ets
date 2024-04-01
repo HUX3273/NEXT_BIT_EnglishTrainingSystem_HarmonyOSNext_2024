@@ -24,7 +24,7 @@ export default class EntryAbility extends UIAbility {
 
 
     // 设置默认首选项数据
-    PreferencesUtil.saveDefaultAll(10,'测试用户','b19511e4-c7a8-46c2-ae6b-4c047987e58a','3325');
+    PreferencesUtil.saveDefaultAll(10,'测试用户','b19511e4-c7a8-46c2-ae6b-4c047987e58a','3325','');
 
     //
     // 初始化音视频缓存代理服务器

@@ -126,7 +126,7 @@ struct Play {
       .height("5%")
 
       // 视频区
-      // todo 视频缓存播放
+      // 视频缓存播放
       Stack() {
 
         // if (this.mediaType == '我的视频') {
@@ -192,12 +192,6 @@ struct Play {
 
       Column() {
 
-      }
-      .backgroundColor('#373737')
-
-
-      Column() {
-
         Flex({ direction: FlexDirection.Column }) {
 
           // 文本全屏or缩回按钮
@@ -226,11 +220,13 @@ struct Play {
           })
             .height('95%')
             .width('100%')
+            //.backgroundColor('#1fffff')
 
         }
         .height("100%")
 
       }
+      //.backgroundColor('#f11111')
       .height(this.textReaderHeight)
       .width('100%')
       .justifyContent(FlexAlign.Center)

@@ -127,12 +127,12 @@ export struct TextReader {
             }
 
           })
-
         }
-
       }
+      .margin({bottom:20})
 
     }
+    .height('100%')
   }
 
   public onCancel() {

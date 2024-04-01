@@ -25,6 +25,7 @@ const KEY_APP_FONT_SIZE = 'appFontSize';
 const KEY_USER_NAME = 'userName';
 const KEY_USER_ID = 'userID';
 const KEY_TOKEN = 'token'
+const KEY_AVATAR = 'avatar'
 
 
 
@@ -46,12 +47,10 @@ export class PreferencesUtil {
   }
 
 
-
-
   ////////////////////////////////////////         在应用创建时给数据默认值           ////////////////////////////////////////
 
   // 通过has方法判断首选项中是否包含指定的key，保证指定的key不会被重复保存
-  saveDefaultAll(fontSize: number,userName: string,token: string,userID: string) {
+  saveDefaultAll(fontSize: number,userName: string,token: string,userID: string,avatar:string) {
     let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
     getAllPreferences().then((preferences: dataPreferences.Preferences) => {
       // 判断保存的key是否存在
@@ -95,6 +94,18 @@ export class PreferencesUtil {
         Logger.info(TAG, '==== preferences has userID is ' + isExist);
         if (!isExist) {
           await preferences.put(KEY_USER_ID, userID);
+          preferences.flush();
+        }
+      }).catch((err: Error) => {
+        Logger.error(TAG, '==== Has the value failed with err: ' + err);
+      });
+
+
+      // 保存 avatar url
+      preferences.has(KEY_AVATAR).then(async (isExist: boolean) => {
+        Logger.info(TAG, '==== preferences has avatar is ' + isExist);
+        if (!isExist) {
+          await preferences.put(KEY_AVATAR, avatar);
           preferences.flush();
         }
       }).catch((err: Error) => {
@@ -166,6 +177,19 @@ export class PreferencesUtil {
   }
 
 
+  saveAvatar(avatar: string){
+    let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
+    getAllPreferences().then(async (preferences: dataPreferences.Preferences) => {
+      // 保存 avatar 数据
+      await preferences.put(KEY_AVATAR, avatar);
+      // 数据持久化
+      preferences.flush();
+    }).catch((err: Error) => {
+      Logger.error(TAG, '==== put the preferences failed, err: ' + err);
+    });
+  }
+
+
 
   ////////////////////////////////////////         取数据           ////////////////////////////////////////
 
@@ -195,6 +219,13 @@ export class PreferencesUtil {
     let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
     userID = await (await getAllPreferences()).get(KEY_USER_ID, userID);
     return userID;
+  }
+
+  async getAvatar() {
+    let avatar: string = '';
+    let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
+    avatar = await (await getAllPreferences()).get(KEY_AVATAR, avatar);
+    return avatar;
   }
 
   ////////////////////////////////////////         删除数据           ////////////////////////////////////////
@@ -238,6 +269,16 @@ export class PreferencesUtil {
       Logger.info(TAG, '==== Succeeded in deleting the key UserID.');
     }).catch((err: Error) => {
       Logger.error(TAG, '==== Failed to delete the key UserID. Cause: ' + err);
+    });
+  }
+  async deleteAvatar() {
+    let getAllPreferences: Function = GlobalContext.getContext().getObject('getAllPreferences') as Function;
+    const preferences: dataPreferences.Preferences = await getAllPreferences();
+    let deleteValue = preferences.delete(KEY_AVATAR);
+    deleteValue.then(() => {
+      Logger.info(TAG, '==== Succeeded in deleting the KEY_AVATAR.');
+    }).catch((err: Error) => {
+      Logger.error(TAG, '==== Failed to delete the KEY_AVATAR. Cause: ' + err);
     });
   }
 

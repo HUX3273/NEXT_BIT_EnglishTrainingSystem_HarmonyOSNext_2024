@@ -81,7 +81,7 @@ export default struct RankListItem {
               .margin({ left: 10 })
 
           }
-          .width('55%')
+          .width('50%')
 
           // 学习时间
           Row() {
@@ -89,13 +89,23 @@ export default struct RankListItem {
               .height(25)
               .width(25)
 
-            Text((this.rankItem.duration / 60).toString() + 'min')
-              .fontColor(this.fontColor)
-              .margin({ left: 10, right: 10 })
+            if ((this.rankItem.duration / 60) / 60 > 100) {
+              Text(((this.rankItem.duration / 60) / 60).toFixed(1).toString() + ' h')
+                .fontColor(this.fontColor)
+                .margin({ left: 10, right: 10 })
+            } else if ((this.rankItem.duration / 60) > 100) {
+              Text((this.rankItem.duration / 60).toFixed(1).toString() + ' m')
+                .fontColor(this.fontColor)
+                .margin({ left: 10, right: 10 })
+            } else {
+              Text((this.rankItem.duration).toFixed(1).toString() + ' s')
+                .fontColor(this.fontColor)
+                .margin({ left: 10, right: 10 })
+            }
 
 
           }
-          .width('25%')
+          .width('30%')
         }
         .justifyContent(FlexAlign.End)
         .height(50)

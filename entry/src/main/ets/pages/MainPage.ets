@@ -36,6 +36,9 @@ struct MainPage {
       this.userID = value
     });
 
+    await PreferencesUtil.getAvatar().then((value) => {
+      this.avatar = value
+    });
   }
 
   build() {
@@ -45,12 +48,21 @@ struct MainPage {
           Stack() {
             Row() {
               Stack() {
-                //TODO 显示用户头像
-                Image($r('app.media.user_default'))
-                  .height(67)
-                  .width(67)
-                  .borderRadius(40)
-                  .zIndex(2)
+                // 显示用户头像
+                if(this.avatar == null || this.avatar == ''){
+                  Image($r('app.media.user_default'))
+                    .height(67)
+                    .width(67)
+                    .borderRadius(40)
+                    .zIndex(2)
+                } else {
+                  Image(this.avatar)
+                    .height(67)
+                    .width(67)
+                    .borderRadius(40)
+                    .zIndex(2)
+                }
+
                 Text()
                   .height(75)
                   .width(75)
