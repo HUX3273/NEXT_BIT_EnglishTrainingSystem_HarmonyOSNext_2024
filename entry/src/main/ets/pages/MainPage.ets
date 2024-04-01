@@ -194,32 +194,49 @@ struct MainPage {
       .margin({ top: 10 })
 
 
-      // 测试按钮
-      Button('TestPage entrance')
-        .onClick(() => {
-          //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
-          //console.info('====测试：' + simpleName)
-          router.pushUrl({
-            url: 'pages/TestPage',
+      Flex(){
+        // 测试按钮
+        Button('TestPage entrance')
+          .onClick(() => {
+            //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
+            //console.info('====测试：' + simpleName)
+            router.pushUrl({
+              url: 'pages/TestPage',
 
-          });
-        })
+            });
+          })
 
-      // 网页按钮
-      Button('WebPage entrance')
-        .onClick(() => {
-          //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
-          //console.info('====测试：' + simpleName)
-          router.pushUrl({
-            url: 'pages/WebPage',
-          });
-        })
+        // 网页按钮
+        Button('WebPage entrance')
+          .onClick(() => {
+            //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
+            //console.info('====测试：' + simpleName)
+            router.pushUrl({
+              url: 'pages/WebPage',
+            });
+          })
+
+
+        // AVPLAYER
+        Button('AVPLAYER entrance')
+          .onClick(() => {
+            //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
+            //console.info('====测试：' + simpleName)
+            router.pushUrl({
+              url: 'view/HttpsPlayer',
+            });
+          })
+      }
+
 
     }
-
     .height('100%')
     .width('100%')
   }
+
+
+
+
 
   // 在后台把本token注销
   logout_HTTP() {

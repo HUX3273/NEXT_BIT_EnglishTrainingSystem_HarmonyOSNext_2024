@@ -211,7 +211,7 @@ struct HorizontalItem {
 
         this.subtitleUrl = JSON.parse(json_string)
 
-        console.info("==== 取字幕url的结果：" + this.subtitleUrl)
+        //console.info("==== 取字幕url的结果：" + this.subtitleUrl)
 
 
         this.downloadFile_HTTP()
@@ -255,13 +255,13 @@ struct HorizontalItem {
 
 
         // 根据返回值的类型把下载的数据读出来
-        console.info('==== 返回结果类型：'+ data.resultType)
+        // console.info('==== 返回结果类型：'+ data.resultType)
 
         // string类型
         if(data.resultType == 0){
           this.subtitleText = data.result.toString()
-          if (this.subtitleText != '')
-            console.info('==== 字幕：' + this.subtitleText.substring(0, 100))
+          // if (this.subtitleText != '')
+          //   console.info('==== 字幕：' + this.subtitleText.substring(0, 100))
         }
 
         // arrayBuffer类型
@@ -272,8 +272,8 @@ struct HorizontalItem {
 
 
 
-          if (this.subtitleText != '')
-            console.info('==== 字幕：' + this.subtitleText.substring(0, 100))
+          // if (this.subtitleText != '')
+          //   console.info('==== 字幕：' + this.subtitleText.substring(0, 100))
         }
 
       }

@@ -14,6 +14,8 @@
     "@ohos/crypto-js": "^2.0.3",
     "@ohos/lottie": "^2.0.9",
     "@ohos/axios": "^2.2.0",
+    "@ohos/video-cache": "^1.0.0",
+    "@ohos/gsyvideoplayer": "^1.0.0"
   },
   "dynamicDependencies": {}
 }

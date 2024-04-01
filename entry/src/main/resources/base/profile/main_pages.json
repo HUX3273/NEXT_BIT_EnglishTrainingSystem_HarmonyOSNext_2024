@@ -14,6 +14,7 @@
     "pages/study_pages/EarPage",
 
     "view/PdfBookReader",
-    "view/PhotoBookReader"
+    "view/PhotoBookReader",
+    "view/HttpsPlayer"
   ]
 }

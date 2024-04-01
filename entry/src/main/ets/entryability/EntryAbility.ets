@@ -5,6 +5,8 @@ import Logger from '../common/utils/Logger';
 import PreferencesUtil from '../common/database/Preferencesutil';
 import { AbilityConstant, Want } from '@kit.AbilityKit';
 import { GlobalContext } from '../common/utils/GlobalContext';
+import { HttpProxyCacheServer, HttpProxyCacheServerBuilder,CacheListener,FileNameGenerator ,HeaderInjector} from '@ohos/video-cache';
+import GlobalProxyServer from '../common/proxy/GlobalProxyServer';
 
 const TAG = '[entryAbility]';
 
@@ -22,7 +24,14 @@ export default class EntryAbility extends UIAbility {
 
 
     // 设置默认首选项数据
-    PreferencesUtil.saveDefaultAll(10,'测试用户','09e68ab9-b4c9-42d8-a2a4-171f9cf2fec1','3325');
+    PreferencesUtil.saveDefaultAll(10,'测试用户','b19511e4-c7a8-46c2-ae6b-4c047987e58a','3325');
+
+    //
+    // 初始化音视频缓存代理服务器
+    //let server: HttpProxyCacheServer = new HttpProxyCacheServerBuilder(getContext()).build();
+    //server.registerCacheListener(new MyCacheListener(), this.videoName);
+    //GlobalProxyServer?.getInstance()?.setServer(server);
+
 
   }
 
