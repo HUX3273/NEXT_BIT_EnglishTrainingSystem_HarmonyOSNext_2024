@@ -74,8 +74,7 @@ export struct WordTranslatorDialog {
 
         if(this.isPageLoading == true){
           LoadingProgress()
-            .width(50)
-            .height(50)
+            .width(60).height(60)
             .margin({ top: 30,bottom:30 })
         }
 

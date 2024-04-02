@@ -18,7 +18,8 @@ struct MainPage {
     router.pushUrl({
       url: 'pages/study_pages/' + desPage,
       params: {
-        token: this.token
+        token: this.token,
+        treeCode: ''
       }
     });
   }
@@ -235,7 +236,7 @@ struct MainPage {
             //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
             //console.info('====测试：' + simpleName)
             router.pushUrl({
-              url: 'view/HttpsPlayer',
+              url: "pages/secondary_pages/HttpsPlayer",
             });
           })
       }

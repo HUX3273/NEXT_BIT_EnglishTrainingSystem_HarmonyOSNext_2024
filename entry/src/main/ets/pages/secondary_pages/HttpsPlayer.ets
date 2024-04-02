@@ -20,17 +20,17 @@ import audio from '@ohos.multimedia.audio';
 import { CacheListener, HttpProxyCacheServer, HttpProxyCacheServerBuilder } from '@ohos/video-cache';
 
 import fs from '@ohos.file.fs';
-import MediaLibraryUtils from '../common/utils/MediaLibraryUtils';
-import CommonConstants from '../common/constants/CommonConstants';
-import Logger from '../common/utils/Logger';
-import GlobalProxyServer from '../common/proxy/GlobalProxyServer';
+import MediaLibraryUtils from '../../common/utils/MediaLibraryUtils';
+import CommonConstants from '../../common/constants/CommonConstants';
+import Logger from '../../common/utils/Logger';
+import GlobalProxyServer from '../../common/proxy/GlobalProxyServer';
 
 const TAG: string = 'MediaDemo HttpPlayer:';
 
 @Entry
 @Component
 export struct HttpPlayer {
-  @State ratio: number = 1.0;
+  @State ratio: number = 1;
   @State mediaLibUtils: MediaLibraryUtils = new MediaLibraryUtils();
   @State isPlaying: boolean = true;
   @State currentTime: string = '0';
@@ -561,11 +561,15 @@ export struct HttpPlayer {
               controller: this.mXcomponentController
             })
               .onLoad(() => {
-                // 加载完成后调用初始化播放器函数
+                // 加载完成后调用初始化播放器函数\
                 this.initAVPlayer();
               })
               .width('100%')
               .aspectRatio(this.ratio)
+
+
+
+
           }
           .height('80%')
           .width('100%')

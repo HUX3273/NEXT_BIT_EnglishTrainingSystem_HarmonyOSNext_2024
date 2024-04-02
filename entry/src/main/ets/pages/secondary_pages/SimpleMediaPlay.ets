@@ -1,14 +1,15 @@
 import router from '@ohos.router';
-import { VideoPlayer } from './MediaPlayer';
-import { TextReader } from './TextReader';
+import { VideoPlayer } from '../../view/MediaPlayer';
+import { TextReader } from '../../view/TextReader';
 import http from '@ohos.net.http';
-import CommonConstants from '../common/constants/CommonConstants';
-import { SearchMyWordDialog } from './SearchMyWordDialog';
-import { StudyRecord } from '../model/StudyRecord';
-import { StartRecordArgs } from '../net/request/StartRecordArgs';
-import { EndRecordArgs } from '../net/request/EndRecordArgs';
-import GlobalProxyServer from '../common/proxy/GlobalProxyServer';
+import CommonConstants from '../../common/constants/CommonConstants';
+import { SearchMyWordDialog } from '../../view/SearchMyWordDialog';
+import { StudyRecord } from '../../model/StudyRecord';
+import { StartRecordArgs } from '../../net/request/StartRecordArgs';
+import { EndRecordArgs } from '../../net/request/EndRecordArgs';
+import GlobalProxyServer from '../../common/proxy/GlobalProxyServer';
 import { HttpPlayer } from './HttpsPlayer';
+import { display } from '@kit.ArkUI';
 
 
 @Entry
@@ -46,7 +47,10 @@ struct Play {
   studyRecord: StudyRecord = new StudyRecord(-1)
 
 
-  private radio:number = 1.3
+
+  private radio:number = 1.7
+
+
 
   async aboutToAppear() {
     if (this.mediaType == '我的视频') {
@@ -103,12 +107,12 @@ struct Play {
         .width('80%')
         .justifyContent(FlexAlign.Center)
 
+        // 搜单词
         Row() {
           Image($r('app.media.search'))
             .width(26)
             .height(26)
             .margin({ right: 20 })
-
         }
         .height(40)
         .width('10%')
@@ -245,15 +249,18 @@ struct Play {
         this.textReaderHeight = '90%'
         this.exchangeFullScreenIcon = $r('app.media.down')
       } else if (this.mediaType == '我的视频') {
+
+        // TODO 取屏幕宽度，然后用 ratio 做自适应高度
         this.mediaPlayerHeight = '30%'
         this.textReaderHeight = '65%'
         this.exchangeFullScreenIcon = $r('app.media.down')
 
+
       }
 
     } else if (this.textFullScreen == false) {
-      this.mediaPlayerHeight = '45%'
-      this.textReaderHeight = '50%'
+      this.mediaPlayerHeight = '35%'
+      this.textReaderHeight = '60%'
       this.exchangeFullScreenIcon = $r('app.media.up')
 
     }

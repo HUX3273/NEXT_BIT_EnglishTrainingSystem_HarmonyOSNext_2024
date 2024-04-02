@@ -94,53 +94,60 @@ struct HorizontalItem {
 
       if(this.isPageLoading == true){
 
-        Flex() {
+        Row() {
+
           LoadingProgress()
-            .width(150)
-            .height(104)
+            .width(60).height(60)
             .margin({ left: 8, right: 5 })
 
-          Text()
-            .margin({
-              top: 12,
-              bottom: 12
-            })
-            .textAlign(TextAlign.Center)
-            .fontSize(16)
-            .fontWeight(FontWeight.Medium)
+          // Text()
+          //   .margin({
+          //     top: 12,
+          //     bottom: 12
+          //   })
+          //   .textAlign(TextAlign.Center)
+          //   .fontSize(16)
+          //   .fontWeight(FontWeight.Medium)
+
         }
 
 
       } else {
-        Flex() {
 
-          if(this.imageSrc == ''|| this.imageSrc == null){
-            if(this.mediaType == "我的视频" ){
-            Image( $r("app.media.video"))
-              .width(150)
-              .height(104)
-              .margin({ left: 8, right: 5 })
-              .borderRadius(24)
+        Row() {
 
-            }else  if(this.mediaType == "我的音频" ){
-              Image( $r("app.media.audio"))
-                .width(150)
-                .height(104)
+          // 图片
+          Column(){
+            if(this.imageSrc == ''|| this.imageSrc == null){
+
+              if(this.mediaType == "我的视频" ){
+                Image( $r("app.media.video"))
+                  .margin({ left: 8, right: 5 })
+                  .width('80%').height('80%')
+                  .borderRadius(24)
+
+              }else  if(this.mediaType == "我的音频" ){
+
+                Image( $r("app.media.audio"))
+                  .margin({ left: 8, right: 5 })
+                  .width('80%').height('80%')
+                  .borderRadius(24)
+              }
+
+
+            } else {
+              // 视频封面
+              Image(this.imageSrc)
                 .margin({ left: 8, right: 5 })
                 .borderRadius(24)
+
             }
-
-
-          } else {
-            Image(this.imageSrc)
-              .width(150)
-              .height(104)
-              .margin({ left: 8, right: 5 })
-              .borderRadius(24)
-
           }
+          .width('45%')
 
 
+
+          // 内容标题
           Text(this.mediaName)
             .margin({
               top: 12,
@@ -149,17 +156,21 @@ struct HorizontalItem {
             .textAlign(TextAlign.Center)
             .fontSize(16)
             .fontWeight(FontWeight.Medium)
+            .width('55%')
+
         }
 
 
       }
     }
+    //.backgroundColor('#1fffff')
     .justifyContent(FlexAlign.Center)
     .margin({ bottom: 10, top: 10 })
+    .width('100%').height(120)
     .onClick(() => {
       // 点击后播放对应影片
       router.pushUrl({
-        url: 'view/SimpleMediaPlay',
+        url: "pages/secondary_pages/SimpleMediaPlay",
         params: {
           mediaSrc: this.mediaSrc,
           mediaName: this.mediaName,
@@ -173,6 +184,8 @@ struct HorizontalItem {
     })
 
   }
+
+
 
 
   getSubtitle_HTTP() {

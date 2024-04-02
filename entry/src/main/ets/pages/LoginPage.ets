@@ -110,8 +110,7 @@ struct LoginPage {
 
         if (this.isShowProgress) {
           LoadingProgress()
-            .width('40vp')
-            .height('40vp')
+            .width(60).height(60)
             .margin({ top: '30vp' })
         }
 

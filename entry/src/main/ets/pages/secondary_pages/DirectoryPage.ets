@@ -8,20 +8,18 @@ import CommonConstants from '../../common/constants/CommonConstants';
 
 @Entry
 @Component
-struct PictureBookPage {
-  @State title: string = '绘本'
+// 绘本次级目录
+struct DirectoryPage {
+  @State title: string = (router.getParams() as Record<string, Object>).bookName as string;
 
+  private token: string = (router.getParams() as Record<string, Object>).token as string;
 
-  token: string = (router.getParams() as Record<string, Object>).token as string;
+  private treeCode: string = (router.getParams() as Record<string, Object>).treeCode as string;
+
 
   @Provide training:Array<Training> = []
 
 
-  backToMainPage():void{
-    router.replaceUrl({
-      url: 'pages/MainPage',
-    });
-  }
 
   async aboutToAppear() {
 
@@ -44,7 +42,7 @@ struct PictureBookPage {
             .margin({left:10})
             .onClick(() => {
               // 页面跳转
-              this.backToMainPage()
+              router.back()
             })
         }
         .width('33.33%')
@@ -52,7 +50,7 @@ struct PictureBookPage {
 
         // 标题
         Row(){
-          Text(this.title)
+          Text(this.title = null ? '绘本':this.title)
             .fontSize(25)
             .fontWeight(FontWeight.Medium)
             .fontWeight(FontWeight.Medium)
@@ -95,7 +93,7 @@ struct PictureBookPage {
 
     console.info('==== 请求训练清单（绘本）')
 
-    let getTrainingListArgs: string = JSON.stringify(new GetTrainingListArgs('PICTURE_BOOK', ''))
+    let getTrainingListArgs: string = JSON.stringify(new GetTrainingListArgs('PICTURE_BOOK', this.treeCode))
 
     let httpRequest_getTrainingList = http.createHttp();
     let url = CommonConstants.API_HOST + "client/api/trainingList/list"

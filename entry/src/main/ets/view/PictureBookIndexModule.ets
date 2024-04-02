@@ -14,6 +14,7 @@ export struct PictureBookModule {
     await PreferencesUtil.getToken().then((value) => {
       this.token = value
     });
+
   }
 
   build() {
@@ -31,14 +32,17 @@ export struct PictureBookModule {
 
 
       Grid() {
-        ForEach(this.training, (item: Training) => {
+        ForEach(this.training, (item: Training,index) => {
           GridItem() {
             HorizontalItem({
               coverImgSrc: item.coverOssPath,
               bookSrc: item.clientUserResourceFile.ossPath,
+              index:index,
               bookName: item.clientUserResourceFile.fileName,
               token:this.token,
-              srcId:item.clientUserResourceFile.id
+              srcId:item.clientUserResourceFile.id,
+              treeCode:item.clientUserResourceFile.treeCode,
+              training:$training
             })
           }
           .margin({ left: 8, right: 8, bottom: 10 })
@@ -66,50 +70,117 @@ export struct PictureBookModule {
 }
 
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 @Component
 struct HorizontalItem {
   private coverImgSrc: string = '';
-  private bookSrc: string = ''; // PDF
-  private bookSrcArr:Array<string> = [''] // PHOTO
+  private bookSrc: string = '';
   private bookName: string = '';
   @State isPageLoading: Boolean = true
-
+  private treeCode:string = ''
 
   public token: string = '';
   public srcId:number = -1;
 
+  private index:number = 0;// 仅用于图片绘本，记录页面索引值
+
+
+  @Link training: Array<Training>; // 用于PHOTO
 
 
   async aboutToAppear() {
 
-    console.info("==== token:"+this.token)
-    this.bookSrcArr[0] = this.bookSrc
+    //console.info("==== HorizontalItem training:"+this.training)
+
 
   }
 
   build() {
     Column() {
-      Flex(){
+      Row(){
 
-        if(this.coverImgSrc == ''|| this.coverImgSrc == null){
-          Column(){
-            Image(  $r("app.media.book") )
+        // 左图
+        Column(){
+
+          if(this.coverImgSrc == ''|| this.coverImgSrc == null){
+            if(!this.bookSrc){
+              Column(){
+                if(this.bookSrc == null || this.bookSrc == ''){
+                  Image(  $r("app.media.directory") )
+                    .width('70%').height('70%')
+                } else {
+                  Image(  $r("app.media.book") )
+                    .width('80%').height('80%')
+                }
+              }
+              .width('100%').height('100%')
+              //.backgroundColor('#ffd7d7d7')
+              .justifyContent(FlexAlign.Center)
+              .borderRadius(24)
+              .margin({ left: 8, right: 5 })
+            } else {
+
+              if(this.bookSrc.match('pdf')){
+                if(this.bookSrc == null || this.bookSrc == ''){
+                  Image(  $r("app.media.directory") )
+                    .width('70%').height('70%')
+                } else {
+                  Image(  $r("app.media.book") )
+                    .width('80%').height('80%')
+                }
+              } else {
+                Stack(){
+                  LoadingProgress()
+                    .width(60).height(60)
+                    .margin({ left: 8, right: 5 })
+                    .borderRadius(24)
+                    .zIndex(0)
+
+                  Image(  this.bookSrc )
+                    .margin({ left: 8, right: 5 })
+                    .borderRadius(24)
+                    .zIndex(2)
+                  // .backgroundImage($r('app.media.loading'))
+                  // .backgroundImagePosition(Alignment.Center)
+                }
+                .width('100%').height('100%')
+                .alignContent(Alignment.Center)
+                .borderRadius(24)
+                .margin({ left: 8, right: 5 })
+              }
+
+
+            }
+
+
+
+          } else {
+
+            Stack(){
+              LoadingProgress()
+                .width(60).height(60)
+                .margin({ left: 8, right: 5 })
+                .borderRadius(24)
+                .zIndex(0)
+
+              Image(  this.coverImgSrc )
+                .margin({ left: 8, right: 5 })
+                .borderRadius(24)
+                .zIndex(2)
+              // .backgroundImage($r('app.media.loading'))
+              // .backgroundImagePosition(Alignment.Center)
+            }
+
           }
-          .width(150)
-          .height(104)
-          .borderRadius(24)
-          .margin({ left: 8, right: 5 })
-        } else {
-
-          Image(  this.coverImgSrc )
-            .width(150)
-            .height(104)
-            .margin({ left: 8, right: 5 })
-            .borderRadius(24)
-
         }
+        .width('45%')
 
 
+        // 文本
         Text(this.bookName)
           .margin({
             top: 12,
@@ -118,40 +189,58 @@ struct HorizontalItem {
           .textAlign(TextAlign.Center)
           .fontSize(16)
           .fontWeight(FontWeight.Medium)
+          .width('55%')
       }
+      .width('100%').height('100%')
 
     }
     .margin({ bottom: 10, top: 10 })
+    .width('100%').height(120)
     .justifyContent(FlexAlign.Center)
     .onClick(() => {
-      // 点击后打开绘本
 
-      if(this.bookSrcArr.length == 1){
-        console.info("==== 绘本链接："+this.bookSrc)
-        // PDF
+      if(this.bookSrc){
+        // 点击后打开绘本
+        if(this.bookSrc.match('pdf') != null){
+          console.info("==== 绘本链接："+this.bookSrc)
+          // PDF 格式绘本
+          router.pushUrl({
+            url: "pages/secondary_pages/PdfBookReader",
+            params: {
+              coverImgSrc: this.coverImgSrc,
+              bookSrc:this.bookSrc,
+              bookName: this.bookName,
+              token:this.token,
+              srcId:this.srcId
+            }
+          })
+        } else {
+          // PHOTO 格式绘本
+          router.pushUrl({
+            url: "pages/secondary_pages/PhotoBookReader",
+            params: {
+              coverImgSrc: this.coverImgSrc,
+              photoTraining: this.training,
+              //indexStart:this.index,
+              bookName: this.bookName,
+              token:this.token,
+              srcId:this.srcId
+            }
+          })
+        }
+      } else {
+
         router.pushUrl({
-          url: 'view/PdfBookReader',
+          url: 'pages/secondary_pages/DirectoryPage',
           params: {
-            coverImgSrc: this.coverImgSrc,
-            bookSrc:this.bookSrc,
-            bookName: this.bookName,
             token:this.token,
-            srcId:this.srcId
+            treeCode:this.treeCode,
+            directoryName:this.bookName
           }
         })
-      } else  if(this.bookSrcArr.length != 1){
-        // PHOTO
-        router.pushUrl({
-          url: 'view/PhotoBookReader',
-          params: {
-            coverImgSrc: this.coverImgSrc,
-            bookSrc: this.bookSrc,
-            bookName: this.bookName,
-            token:this.token,
-            srcId:this.srcId
-          }
-        })
+
       }
+
 
 
     })

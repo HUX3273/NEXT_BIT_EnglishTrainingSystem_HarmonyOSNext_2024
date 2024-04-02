@@ -1,7 +1,7 @@
 import router from '@ohos.router';
 import http from '@ohos.net.http';
 import CommonConstants from '../../common/constants/CommonConstants';
-import { MultiMediaModule } from '../../view/MultiMediaIndexModule';
+import { MultiMediaModule } from '../../view/MediaIndexModule';
 import { GetTrainingListArgs } from '../../net/request/GetTrainingListArgs';
 import { Training } from '../../model/Training';
 import PreferencesUtil from '../../common/database/PreferencesUtil';

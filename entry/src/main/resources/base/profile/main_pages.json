@@ -5,16 +5,17 @@
     "pages/TestPage",
     "pages/RankPage",
     "pages/WebPage",
-    "view/SimpleMediaPlay",
     "pages/study_pages/MouthPage",
     "pages/study_pages/EyePage",
     "pages/study_pages/ShinyCardPage",
     "pages/study_pages/PictureBookPage",
     "pages/study_pages/OralPracticePage",
     "pages/study_pages/EarPage",
+    "pages/secondary_pages/SimpleMediaPlay",
+    "pages/secondary_pages/PdfBookReader",
+    "pages/secondary_pages/PhotoBookReader",
+    "pages/secondary_pages/HttpsPlayer",
+    "pages/secondary_pages/DirectoryPage"
 
-    "view/PdfBookReader",
-    "view/PhotoBookReader",
-    "view/HttpsPlayer"
   ]
 }

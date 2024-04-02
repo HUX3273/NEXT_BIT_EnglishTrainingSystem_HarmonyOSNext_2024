@@ -2,12 +2,12 @@ import url from '@ohos.url';
 import web_webview from '@ohos.web.webview';
 import { BusinessError } from '@ohos.base';
 import router from '@ohos.router';
-import { SearchMyWordDialog } from './SearchMyWordDialog';
-import { StartRecordArgs } from '../net/request/StartRecordArgs';
+import { SearchMyWordDialog } from '../../view/SearchMyWordDialog';
+import { StartRecordArgs } from '../../net/request/StartRecordArgs';
 import { http } from '@kit.NetworkKit';
-import CommonConstants from '../common/constants/CommonConstants';
-import { EndRecordArgs } from '../net/request/EndRecordArgs';
-import { StudyRecord } from '../model/StudyRecord';
+import CommonConstants from '../../common/constants/CommonConstants';
+import { EndRecordArgs } from '../../net/request/EndRecordArgs';
+import { StudyRecord } from '../../model/StudyRecord';
 
 
 @Entry

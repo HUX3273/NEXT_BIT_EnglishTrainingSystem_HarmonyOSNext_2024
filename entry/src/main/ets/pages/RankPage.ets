@@ -182,8 +182,7 @@ struct RankPage {
 
       if(this.isPageLoading == true){
         LoadingProgress()
-          .width(100)
-          .height(100)
+          .width(60).height(60)
       } else {
         // 排行榜列表
         List({ space: 12 }) {

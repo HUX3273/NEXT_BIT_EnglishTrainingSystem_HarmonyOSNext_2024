@@ -68,8 +68,7 @@ struct ShinyCardPage {
       if(this.pageIsLoading == true){
 
         LoadingProgress()
-          .width(100)
-          .height(100)
+          .width(60).height(60)
           .margin({ top: 50 })
 
       } else if(this.pageIsLoading == false){
