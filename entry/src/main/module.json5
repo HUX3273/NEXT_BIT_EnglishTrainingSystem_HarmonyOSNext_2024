@@ -35,8 +35,38 @@
     ],
     "requestPermissions": [
       {
-        "name": "ohos.permission.INTERNET"
-      }
+        "name": "ohos.permission.INTERNET",
+
+      },
+      {
+        "name": "ohos.permission.APPROXIMATELY_LOCATION",
+        "usedScene": {
+          "abilities": [
+            "EntryAbility"
+          ],
+          "when": "inuse"
+        }
+      },
+      {
+        "name": "ohos.permission.LOCATION",
+        "usedScene": {
+          "abilities": [
+            "EntryAbility"
+          ],
+          "when": "inuse"
+        }
+      },
+      {
+        "name": "ohos.permission.READ_MEDIA",
+        "usedScene": {
+          "abilities": [
+            "EntryAbility"
+          ],
+
+        }
+      },
+
+
     ]
   }
 }

@@ -6,20 +6,21 @@ import promptAction from '@ohos.promptAction';
 import { AddFlashCardArgs } from '../net/request/AddFlashCardArgs';
 import { FlashCard } from '../model/FlashCard';
 import { UpdateFlashCardArgs } from '../net/request/UpdateFlashCardArgs';
+import { MediaBean } from '../model/MediaBean';
+import { MediaHelper } from '../common/utils/MediaHelper';
+import { common } from '@kit.AbilityKit';
+import { AddMyImageDialog } from './AddMyImageDialog';
 
 
 @CustomDialog
 export struct AddToShinyCardDialog {
   @State selectedIndexArr: Array<number> = [];
-
   @Link word: string; // 单词
   @Link token: string;
   @Link wordId: number
   @Link isFlashCardExist: Boolean
-
   @State httpPicSrcArr: Array<string> = []; // 存http获取的图片链接
   @State chosenPicSrcArr: Array<string> = []; // 存选中的的图片链接
-  // private imagesUrl: Array<string> ;
   @State isChosenArr: Array<Boolean> = [
     false, false, false, false, false, false,
     false, false, false, false, false, false,
@@ -29,7 +30,25 @@ export struct AddToShinyCardDialog {
     false, false, false, false, false, false]; //存http获取的图片链接的选中信息
   private maxPicNum: number = 5;
 
-  controller: CustomDialogController
+  dialogController_myImage: CustomDialogController = new CustomDialogController({
+    builder: AddMyImageDialog({
+      word: $word,
+      token: $token,
+      wordId: $wordId,
+      isFlashCardExist: $isFlashCardExist,
+      mediaBean:$mediaBean
+
+    }),
+    autoCancel: true,
+    alignment: DialogAlignment.Center,
+    offset: { dx: 0, dy: -20 },
+    gridCount: 4,
+    customStyle: false
+  })
+
+  controller: CustomDialogController // 自己的controller一定要放在最后
+
+
   // 若尝试在CustomDialog中传入多个其他的Controller，以实现在CustomDialog中打开另一个或另一些CustomDialog，那么此处需要将指向自己的controller放在最后
   onCancel() {
     console.info('====Callback when the first button is clicked')
@@ -41,6 +60,10 @@ export struct AddToShinyCardDialog {
     //this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
   }
 
+  @State mediaBean: MediaBean = new MediaBean('', 0, '', '');
+  private mediaHelper: MediaHelper = new MediaHelper(getContext());
+  private context = getContext(this) as common.UIAbilityContext
+
   async aboutToAppear() {
 
     this.searchImageForFlashCard_HTTP()
@@ -48,14 +71,13 @@ export struct AddToShinyCardDialog {
     //this.isFlashCardExist_HTTP()
   }
 
-
   build() {
     Column() {
-        Text(this.isFlashCardExist ? '更新旧闪卡':'添加新闪卡')
-          .fontSize(28)
-          .fontWeight(FontWeight.Bold)
-          .margin({ top: 20, bottom: 10 })
-          .height("10%")
+      Text(this.isFlashCardExist ? '更新旧闪卡' : '添加新闪卡')
+        .fontSize(28)
+        .fontWeight(FontWeight.Bold)
+        .margin({ top: 20, bottom: 10 })
+        .height("10%")
 
       Flex({ justifyContent: FlexAlign.SpaceAround }) {
         Grid() {
@@ -105,19 +127,19 @@ export struct AddToShinyCardDialog {
                   if (this.isChosenArr[index] == true) {
                     if (this.chosenPicSrcArr.indexOf(item) == -1) {
                       this.chosenPicSrcArr.push(item) // 向数组中压入选中的图片源
-                     // console.info('====压入图片 ' + index + ' ,chosenPicSrcArr：' + this.chosenPicSrcArr)
+                      // console.info('====压入图片 ' + index + ' ,chosenPicSrcArr：' + this.chosenPicSrcArr)
 
                       this.selectedIndexArr.push(index)
-                     // console.info('====压入index ' + index + ' ,selectedIndexArr：' + this.selectedIndexArr)
+                      // console.info('====压入index ' + index + ' ,selectedIndexArr：' + this.selectedIndexArr)
                     }
 
                   } else if (this.isChosenArr[index] == false) {
                     if (this.chosenPicSrcArr.indexOf(item) != -1) {
                       this.chosenPicSrcArr.splice(this.chosenPicSrcArr.indexOf(item), 1) // 从数组中弹出取消选中的图片源
-                    //  console.info('====弹出图片 ' + index + ' ,chosenPicSrcArr：' + this.chosenPicSrcArr)
+                      //  console.info('====弹出图片 ' + index + ' ,chosenPicSrcArr：' + this.chosenPicSrcArr)
 
                       this.selectedIndexArr.splice(this.selectedIndexArr.indexOf(index), 1)
-                     // console.info('====弹出index ' + index + ' ,selectedIndexArr：' + this.selectedIndexArr)
+                      // console.info('====弹出index ' + index + ' ,selectedIndexArr：' + this.selectedIndexArr)
                     }
                   }
 
@@ -143,25 +165,25 @@ export struct AddToShinyCardDialog {
 
       }
       .height('60%')
+
       //.backgroundColor("#ffffbf00")
 
 
-
-      Column(){
+      Column() {
         Text("上传本地图片")
           .fontSize(15)
           .fontColor("#ff0090ff")
           .fontWeight(FontWeight.Medium)
-          .margin({top:10})
+          .margin({ top: 10 })
       }
       .width('50%')
       //.backgroundColor("#ff00ff88")
-      .onClick(()=>{
-        // TODO 上传自己本地的图片到闪卡库中
-        console.info("==== 上传自己本地的图片到闪卡库中")
-
+      .onClick(() => {
+        // 上传自己本地的图片到闪卡库中
+        console.info("==== 上传本地的图片到闪卡库中")
+        this.handleClick(MediaOption.Picture)
+        this.dialogController_myImage.open()
       })
-
 
 
       Row() {
@@ -434,4 +456,25 @@ export struct AddToShinyCardDialog {
 
 
   }
+
+  async handleClick(option: MediaOption) {
+    // let mediaBean: MediaBean = new mediaBean('',0,'','');
+    switch (option) {
+      case MediaOption.Picture:
+        this.mediaBean = await this.mediaHelper.selectPicture();
+        break;
+      case MediaOption.File:
+        this.mediaBean = await this.mediaHelper.selectFile();
+        break;
+      default:
+        break;
+    }
+
+  }
+}
+
+
+enum MediaOption {
+  Picture = 0,
+  File = 1,
 }

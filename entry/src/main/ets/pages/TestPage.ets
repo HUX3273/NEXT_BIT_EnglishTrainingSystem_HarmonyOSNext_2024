@@ -1,173 +1,117 @@
-import router from '@ohos.router';
-import PreferencesUtil from '../common/database/Preferencesutil';
+import common from '@ohos.app.ability.common';
+import { MediaBean } from '../model/MediaBean';
+import { MediaHelper } from '../common/utils/MediaHelper';
+import { media } from '@kit.MediaKit';
+import abilityAccessCtrl from '@ohos.abilityAccessCtrl';
+import { bundleManager, ErrorCode } from '@kit.AbilityKit';
+import { hilog } from '@kit.PerformanceAnalysisKit';
+import Request_Permission_From_Users from '../common/utils/Applicant';
 
-
-class ItemData {
-  name: string
-  isSelect: boolean
-
-  constructor(name: string,
-  isSelect: boolean) {
-    this.name = name
-    this.isSelect = isSelect
-  }
-}
 
 @Entry
 @Component
-struct test {
-  // @State arr: Array<ItemData> = [
-  //   new ItemData('赵大', false),
-  //   new ItemData('钱二', false),
-  //   new ItemData('张三', false),
-  //   new ItemData('李四', false),
-  //   new ItemData('王五', false),
-  //   new ItemData('周六', false),
-  //   new ItemData('李七', false),
-  //   new ItemData('朱八', false)
-  // ]
-  //
-  // @State selectedArr:Array<string> = []
-  backToMainPage():void{
-    router.replaceUrl({
-      url: 'pages/MainPage',
-    });
-  }
-
-  @State changeFontSize:number = 0;
-  @State userName:string = '';
-
-  onPageShow() {
-    // 在HomePage的onPageShow方法，调用PreferencesUtil.getChangeFontSize方法获取用户数据，调用get方法获取
-    PreferencesUtil.getChangeFontSize().then((value) => {
-      this.changeFontSize = value;
-
-    });
-    PreferencesUtil.getUserName().then((value) => {
-      this.userName = value;
-
-    });
+struct Index {
+  @State mediaBean: MediaBean = new MediaBean('',0,'','');
 
 
+  private mediaHelper: MediaHelper = new MediaHelper(getContext());
+
+
+  private context = getContext(this) as common.UIAbilityContext
+
+
+  aboutToAppear(): void {
+
+    let res =  Request_Permission_From_Users(this.context)
 
   }
-
-
 
   build() {
-    Column() {
-      Row(){
-        // 返回
-        Row(){
-          Image($r('app.media.ic_back'))
-            .width(30)
-            .height(30)
-            .margin({left:10})
-            .onClick(() => {
-              // 页面跳转
-              this.backToMainPage()
-            })
-        }
-        .width('33.33%')
-        .height(40)
+    Row() {
+      Column() {
+        Text('选择图片')
+          .textAlign(TextAlign.Center)
+          .width(200)
+          .fontSize(16)
+          .padding(10)
+          .margin(20)
+          .border({ width: 0.5, color: '#ff38f84b', radius: 15 })
+          .onClick(() => {
+            this.handleClick(MediaOption.Picture)
+          })
+        //
+        // Text('选择文件')
+        //   .textAlign(TextAlign.Center)
+        //   .width(200)
+        //   .fontSize(16)
+        //   .padding(10)
+        //   .margin(20)
+        //   .border({ width: 0.5, color: '#ff38f84b', radius: 15 })
+        //   .onClick(() => {
+        //     this.handleClick(MediaOption.File)
+        //   })
 
-        // 标题
-        Row(){
-          Text(this.userName)
-            .fontSize(25)
-            .fontWeight(FontWeight.Medium)
-            .fontWeight(FontWeight.Medium)
+        Divider()
+          .width('100%')
+          .height(0.5)
+          .color('#ff99f6a2')
+          .margin({ top: 20 })
+          .padding({ left: 20, right: 20 })
 
-        }
-        .width('33.33%')
-        .height(40)
-        .justifyContent(FlexAlign.Center)
+        Text(`文件名称: ${this.mediaBean.fileName ? this.mediaBean.fileName : ''}`)
+          .textAlign(TextAlign.Center)
+          .width('100%')
+          .fontSize(16)
+          .margin(10)
+
+        Text(`文件大小: ${this.mediaBean.fileSize ? this.mediaBean.fileSize : ''}`)
+          .textAlign(TextAlign.Center)
+          .width('100%')
+          .fontSize(16)
+          .margin(10)
+
+        Text(`文件类型: ${this.mediaBean.fileType ? this.mediaBean.fileType : ''}`)
+          .textAlign(TextAlign.Center)
+          .width('100%')
+          .fontSize(16)
+          .margin(10)
+
+        Text(`文件Uri: ${this.mediaBean.localUrl ? this.mediaBean.localUrl : ''}`)
+          .textAlign(TextAlign.Center)
+          .width('100%')
+          .fontSize(16)
+          .margin(10)
+
+        Image(this.mediaBean.localUrl)
+          .width(300)
+          .height(300)
+          .backgroundColor(Color.Grey)
+
       }
       .width('100%')
-      .height('5%')
-      // ForEach(this.arr, (item: ItemData, index: number) => {
-      //   Row() {
-      //     Checkbox()
-      //       .enabled(false)
-      //       .select(item.isSelect)
-      //     Text(item.name).fontSize(30)
-      //   }
-      //   .onClick(() => {
-      //     console.info('====item', JSON.stringify(item))
-      //     console.info('====index', index)
-      //     item.isSelect = !item.isSelect
-      //     let isSelectCuont = 0 //已选中的数目
-      //     for (let i = 0;i < this.arr.length; i++) {
-      //       if (this.arr[i].isSelect) {
-      //         isSelectCuont++
-      //
-      //       }
-      //     }
-      //     if (isSelectCuont > 5) {
-      //       item.isSelect = !item.isSelect
-      //       console.info('====当前选中的超过5个了，也就是6个了，需要把已选的数据再设置回去。')
-      //       return;
-      //     }
-      //     //更新显示状态
-      //     this.arr[index] = new ItemData(item.name, item.isSelect)
-      //     if(this.arr[index].isSelect == true){
-      //       if(this.selectedArr.indexOf(item.name) == -1){
-      //         this.selectedArr.push(item.name)
-      //         console.info('====压入 '+item.name+' ,selectedArr：'+this.selectedArr)
-      //       }
-      //
-      //     } else  if(this.arr[index].isSelect == false){
-      //       if(this.selectedArr.indexOf(item.name) != -1){
-      //         this.selectedArr.splice(this.selectedArr.indexOf(item.name),1)
-      //         console.info('====弹出 '+item.name+' ,selectedArr：'+this.selectedArr)
-      //
-      //       }
-      //     }
-      //
-      //   })
-      //
-      // })
-
-      Text("你好")
-        .fontSize(this.changeFontSize)
-
-      Button("测试preference").onClick((event: ClickEvent) => {
-        // 把数据通过PreferencesUtil.saveChangeFontSize方法保存起来
-
-        this.changeFontSize = this.changeFontSize + 5
-
-
-        PreferencesUtil.saveChangeFontSize(this.changeFontSize);
-
-      })
-
-      TextInput()
-        .onChange((value: string) => {
-          this.userName = value;
-
-          PreferencesUtil.saveUserName(this.userName);
-
-
-        })
-        .type(InputType.Normal)
-
-
-      Button("删除用户名")
-        .onClick(()=>{
-          PreferencesUtil.deleteUserName()
-          //PreferencesUtil.saveDefaultAll()
-
-          PreferencesUtil.getUserName().then((value)=>{
-            this.userName = value
-          })
-
-
-        })
-      
-
-
-
-
+      .height('100%')
     }
+    .height('100%')
   }
+
+  async handleClick(option: MediaOption) {
+   // let mediaBean: MediaBean = new mediaBean('',0,'','');
+    switch (option) {
+      case MediaOption.Picture:
+       this.mediaBean = await this.mediaHelper.selectPicture();
+        break;
+      case MediaOption.File:
+        this.mediaBean = await this.mediaHelper.selectFile();
+        break;
+      default:
+        break;
+    }
+
+  }
+}
+
+enum MediaOption {
+  Picture = 0,
+  File = 1,
+  TakePhoto = 2
 }
