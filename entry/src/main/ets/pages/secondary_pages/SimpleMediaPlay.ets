@@ -75,106 +75,62 @@ struct Play {
   build() {
     Column() {
 
-      if (!this.isFullScreen) {
+      if (this.mediaType == '我的视频') {
         // 顶栏
-        Row() {
-          // 返回上一页
+        if (!this.isFullScreen) {
           Row() {
-            Image($r('app.media.ic_back'))
-              .width(30)
-              .height(30)
-              .margin({ left: 10 })
-              .onClick(() => {
-                // 页面跳转
-                router.back();
-              })
+            // 返回上一页
+            Row() {
+              Image($r('app.media.ic_back'))
+                .width(30)
+                .height(30)
+                .margin({ left: 10 })
+                .onClick(() => {
+                  // 页面跳转
+                  router.back();
+                })
+            }
+            .width('10%')
+            .height(40)
+
+            // 展示视频标题
+            Row() {
+              Text(this.mediaName)
+                .fontSize(18)
+                .fontWeight(FontWeight.Medium)
+                .fontWeight(FontWeight.Medium)
+                .maxLines(1)
+
+            }
+            .height(40)
+            .width('80%')
+            .justifyContent(FlexAlign.Center)
+
+            // 搜单词
+            Row() {
+              Image($r('app.media.search'))
+                .width(26)
+                .height(26)
+                .margin({ right: 20 })
+            }
+            .height(40)
+            .width('10%')
+            .onClick(() => {
+              // 点击右上角加号自己搜词
+              this.dialogController_searchMyWord.open()
+
+            })
+
+            //.justifyContent(FlexAlign.Center)
+
           }
-          .width('10%')
-          .height(40)
-
-          // 展示视频标题
-          Row() {
-            Text(this.mediaName)
-              .fontSize(18)
-              .fontWeight(FontWeight.Medium)
-              .fontWeight(FontWeight.Medium)
-              .maxLines(1)
-
-          }
-          .height(40)
-          .width('80%')
-          .justifyContent(FlexAlign.Center)
-
-          // 搜单词
-          Row() {
-            Image($r('app.media.search'))
-              .width(26)
-              .height(26)
-              .margin({ right: 20 })
-          }
-          .height(40)
-          .width('10%')
-          .onClick(() => {
-            // 点击右上角加号自己搜词
-            this.dialogController_searchMyWord.open()
-
-          })
-
-          //.justifyContent(FlexAlign.Center)
-
-        }
-        .width('100%')
-        .backgroundColor('#FFFFFF')
-        .height("5%")
-      }
-
-
-      // 视频区 视频缓存播放
-
-      Stack() {
-
-        // if (this.mediaType == '我的视频') {
-        //   if (!this.isPlay && !this.isLoading) {
-        //     Image(this.startIconResource)
-        //       .width(50)
-        //       .height(50)
-        //       .zIndex(2)
-        //       .onClick(() => {
-        //         this.iconOnclick();
-        //       })
-        //   }
-        //   if (this.isLoading) {
-        //     Progress({
-        //       value: 0,
-        //       total: 100,
-        //       type: ProgressType.ScaleRing
-        //     })
-        //       .color(Color.Grey)
-        //       .value(this.progressVal)
-        //       .width(80)
-        //       .style({
-        //         strokeWidth: 15,
-        //         scaleCount: 15,
-        //         scaleWidth: 5
-        //       })
-        //       .zIndex(1)
-        //   }
-        // }
-
-
-        if (this.mediaType == '我的音频') {
-
-          VideoPlayer({
-            videoSrc: this.mediaSrc,
-            controller: this.controller,
-            mediaType: this.mediaType
-          })
-            .zIndex(0)
-
+          .width('100%')
+          .backgroundColor('#FFFFFF')
+          .height("5%")
         }
 
-        else if (this.mediaType == '我的视频') {
-
+        // 视频
+        Stack() {
           Column() {
             HttpPlayer({
               SRC_LIST: [this.mediaSrc],
@@ -186,60 +142,134 @@ struct Play {
               .zIndex(0)
           }
           .width('100%')
-          .height(this.isFullScreen ? '100%':null)
+          .height(this.isFullScreen ? '100%' : null)
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
           .backgroundColor('#373737')
-
         }
+        .height(this.isFullScreen ? '100%' : this.mediaPlayerHeight)
 
-
-      }
-      .height(this.isFullScreen ? '100%':this.mediaPlayerHeight)
-
-
-      if (!this.isFullScreen) {
         // 文本阅读器
-        Column() {
-
-          Flex({ direction: FlexDirection.Column }) {
-
-            // 文本全屏or缩回按钮
-            Row() {
-              // Image(this.exchangeFullScreenIcon)
-              //   .height(30)
-              //   .width(40)
-            }
-            .height(20)
-            .width('100%')
-            .backgroundColor('#FFE6DA')
-            // .onClick(() => {
-            //
-            //   this.exchangeShowMode();
-            //
-            //   this.textFullScreen = !this.textFullScreen;
-            //
-            // })
-            .justifyContent(FlexAlign.Center)
-
-
-            // 文本阅读器
-            TextReader({
-              videoName: this.mediaName,
-              subtitleText: this.subtitleText
-            })
-              .height('95%')
+        if (!this.isFullScreen) {
+          Column() {
+            Flex({ direction: FlexDirection.Column }) {
+              // 分隔栏
+              Row() {
+              }
+              .height(20)
               .width('100%')
-            //.backgroundColor('#1fffff')
+              .backgroundColor('#FFE6DA')
+              .justifyContent(FlexAlign.Center)
+
+              // 文本阅读器
+              TextReader({
+                videoName: this.mediaName,
+                subtitleText: this.subtitleText
+              })
+                .height('95%')
+                .width('100%')
+
+            }
+            .height("100%")
 
           }
-          .height("100%")
-
+          .height(this.textReaderHeight)
+          .width('100%')
+          .justifyContent(FlexAlign.Center)
         }
-        //.backgroundColor('#f11111')
-        .height(this.textReaderHeight)
-        .width('100%')
-        .justifyContent(FlexAlign.Center)
+
+
+
+      } else if (this.mediaType == '我的音频') {
+
+
+
+        // 顶栏
+        if (!this.isFullScreen) {
+          Row() {
+            // 返回上一页
+            Row() {
+              Image($r('app.media.ic_back'))
+                .width(30)
+                .height(30)
+                .margin({ left: 10 })
+                .onClick(() => {
+                  // 页面跳转
+                  router.back();
+                })
+            }
+            .width('10%')
+            .height(40)
+
+            // 展示音频标题
+            Row() {
+              Text(this.mediaName)
+                .fontSize(18)
+                .fontWeight(FontWeight.Medium)
+                .fontWeight(FontWeight.Medium)
+                .maxLines(1)
+
+            }
+            .height(40)
+            .width('80%')
+            .justifyContent(FlexAlign.Center)
+
+            // 搜单词
+            Row() {
+              Image($r('app.media.search'))
+                .width(26)
+                .height(26)
+                .margin({ right: 20 })
+            }
+            .height(40)
+            .width('10%')
+            .onClick(() => {
+              // 点击右上角加号自己搜词
+              this.dialogController_searchMyWord.open()
+
+            })
+
+            //.justifyContent(FlexAlign.Center)
+
+          }
+          .width('100%')
+          .backgroundColor('#FFFFFF')
+          .height("5%")
+        }
+
+        // 文本阅读器
+        if (!this.isFullScreen) {
+          Column() {
+            Flex({ direction: FlexDirection.Column }) {
+              // 文本阅读器
+              TextReader({
+                videoName: this.mediaName,
+                subtitleText: this.subtitleText
+              })
+                .height('100%')
+                .width('100%')
+
+            }
+            .height("100%")
+
+          }
+          .height(this.textReaderHeight)
+          .width('100%')
+          .justifyContent(FlexAlign.Center)
+        }
+
+        // 音频
+        Stack() {
+          VideoPlayer({
+            videoSrc: this.mediaSrc,
+            controller: this.controller,
+            mediaType: this.mediaType
+          })
+            .zIndex(0)
+        }
+        .height(this.isFullScreen ? '100%' : this.mediaPlayerHeight)
+
+
       }
 
 
@@ -254,16 +284,15 @@ struct Play {
   exchangeShowMode() {
     if (this.textFullScreen == true) {
       if (this.mediaType == '我的音频') {
-        this.mediaPlayerHeight = '5%'
-        this.textReaderHeight = '90%'
+        this.mediaPlayerHeight = '12%'
+        this.textReaderHeight = '83%'
         this.exchangeFullScreenIcon = $r('app.media.down')
-      } else if (this.mediaType == '我的视频') {
 
+      } else if (this.mediaType == '我的视频') {
         // TODO 取屏幕宽度，然后用 ratio 做自适应高度
         this.mediaPlayerHeight = '30%'
         this.textReaderHeight = '65%'
         this.exchangeFullScreenIcon = $r('app.media.down')
-
 
       }
 

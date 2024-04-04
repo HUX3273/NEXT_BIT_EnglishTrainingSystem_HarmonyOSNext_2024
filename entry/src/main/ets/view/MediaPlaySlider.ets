@@ -1,11 +1,10 @@
-
 /**
  * video slider component
  */
 @Component
 export struct VideoSlider {
   private controller: VideoController = new VideoController();
-  private mediaType:string='';
+  private mediaType: string = '';
   @Consume isOpacity: boolean;
   @Consume currentStringTime: string;
   @Consume currentTime: number;
@@ -17,45 +16,76 @@ export struct VideoSlider {
   @Consume progressVal: number;
 
   build() {
-    Row({ space: 12 }) {
-      Image(this.isPlay ? $r('app.media.ic_pause') : $r('app.media.ic_play'))
-        .width(24)
-        .height(24)
-        .margin({ left: 12 })
-        .onClick(() => {
-          this.iconOnclick();
-        })
-      Text(this.currentStringTime)
-        .fontSize(16)
-        .fontColor(Color.White)
-        .margin({ left: 12 })
-      Slider({
-        value: this.currentTime,
-        min: 0,
-        max: this.durationTime,
-        step: 1,
-        style: SliderStyle.OutSet
-      })
-        //.blockColor('#FFFFFF')
-        .width('50%')
-        .trackColor('#ffffff')
-        .selectedColor('#EC5706')
-        .showSteps(true)
-        .showTips(true)
-        .trackThickness(this.isOpacity ? 2 : 4)
-        .onChange((value: number, mode: SliderChangeMode) => {
-          this.sliderOnchange(value, mode);
-        })
-      Text(this.durationStringTime)
-        .fontSize(16)
-        .margin({ right: 12 })
-        .fontColor(Color.White)
+    Column() {
+
+      Row() {
+
+        Slider({
+          value: this.currentTime,
+          min: 0,
+          max: this.durationTime,
+          step: 1,
+          style: SliderStyle.OutSet
+        })//.blockColor('#FFFFFF')
+          .width('94%')
+          .trackColor('#ffdedede')//.backgroundColor('#ffffff')
+          .selectedColor('#EC5706')
+          .trackThickness(3)
+          .onChange((value: number, mode: SliderChangeMode) => {
+            this.sliderOnchange(value, mode);
+          })
+
+      }
+      .width('100%').height('5%')
+      .alignItems(VerticalAlign.Center)
+      .justifyContent(FlexAlign.Center)
+
+      // 时间轴
+      Row() {
+        Text(this.currentStringTime)
+          .fontSize(13)
+          .fontColor(Color.White)
+          .margin({ left: 10,top:5 })
+        Text(this.durationStringTime)
+          .fontSize(13)
+          .margin({ right: 10,top:5 })
+          .fontColor(Color.White)
+      }
+      .width('94%').height('20%')
+      .justifyContent(FlexAlign.SpaceBetween)
+
+      // 控制栏
+      Row() {
+        // 上一首
+        Image($r('app.media.previous'))
+          .width(40)
+          .height(40)
+        // 播放暂停
+
+        Image(this.isPlay ? $r('app.media.pause_2') : $r('app.media.play_2'))
+          .width(50)
+          .height(50)
+          .margin({ left: 20, right: 20 })
+          .onClick(() => {
+            this.iconOnclick();
+          })
+        // 下一首
+        Image($r('app.media.next'))
+          .width(40)
+          .height(40)
+      }
+      .width('100%').height('75%')
+      .justifyContent(FlexAlign.Center)
+      .alignItems(VerticalAlign.Center)
+
     }
-    .opacity(this.isOpacity ? 0.5 : 1)
-    .width('100%')
-    .alignItems(VerticalAlign.Center)
     .justifyContent(FlexAlign.Center)
-    .backgroundColor('#373737')
+    .width('100%')
+    .height('100%')
+    .backgroundImage($r('app.media.background'))
+    .backgroundImageSize({ width: '100%', height: '100%' })
+
+    //.backgroundColor('#c6ff6600')
   }
 
   /**

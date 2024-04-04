@@ -237,15 +237,16 @@ struct MainPage {
           })
 
 
-        // AVPLAYER
-        Button('AVPLAYER entrance')
-          .onClick(() => {
-            //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
-            //console.info('====测试：' + simpleName)
-            router.pushUrl({
-              url: "pages/secondary_pages/HttpsPlayer",
-            });
-          })
+        // // AVPLAYER
+        // Button('AVPLAYER entrance')
+        //   .onClick(() => {
+        //     //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
+        //     //console.info('====测试：' + simpleName)
+        //     router.pushUrl({
+        //       url: "pages/secondary_pages/HttpsPlayer",
+        //     });
+        //   })
+
       }
 
 

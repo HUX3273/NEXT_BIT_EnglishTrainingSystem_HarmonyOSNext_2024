@@ -42,7 +42,7 @@ export struct VideoPlayer {
       })
         .width('100%')
         .height(this.mainPlayerHeight)
-        .backgroundColor('#000000')
+        //.backgroundColor('#000000')
         .controls(false)
         .autoPlay(false)
         .objectFit(ImageFit.Contain)
@@ -67,22 +67,26 @@ export struct VideoPlayer {
         })
 
 
-      if(this.mediaType == '我的视频' || this.mediaType == '我的音频'){
-        VideoSlider({
-          controller: this.controller,
-          mediaType: this.mediaType
-        })
-          .height(this.mediaType == '我的视频' ? '10%' : '100%')
+      Column(){
+        if(this.mediaType == '我的视频' || this.mediaType == '我的音频'){
+          VideoSlider({
+            controller: this.controller,
+            mediaType: this.mediaType
+          })
+            .height(this.mediaType == '我的视频' ? '10%' : '100%')
+            //.backgroundColor('#f1111f')
+        }
+
       }
-
-
 
     }
     .height('100%')
     .justifyContent(FlexAlign.Center)
-    .backgroundColor(this.mainPlayerBackgroundColor)
+    //.backgroundColor(this.mainPlayerBackgroundColor)
 
   }
+
+
 
   /**
    * video component prepared callback

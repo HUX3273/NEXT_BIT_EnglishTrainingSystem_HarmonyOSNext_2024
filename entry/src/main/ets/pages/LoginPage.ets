@@ -7,7 +7,6 @@ import LoginResponse from '../common/constants/LoginResponse';
 import { UserInfo } from '../model/UserInfo';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { promptAction, window } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -17,20 +16,17 @@ struct LoginPage {
   @State isShowProgress: boolean = false;
   @State format: string = 'ss'
   @State getCodeInCD: boolean = false;
-
   @State paidMember: boolean = false; // 登录成功，是否为付费用户
   textTimerController: TextTimerController = new TextTimerController()
   // private timeOutId: number = -1;
   private CD: number = 30000;
   private loginSucceed: boolean = false;
   private userInfo: UserInfo = new UserInfo(0, '', '', '', '');
-
   @State userName: string = ''
   @State token: string = ''
   @State userID: string = ''
   @State avatar: string = ''
-
-  private haveLoggedIn: Boolean = false
+  @State haveLoggedIn: Boolean = false
 
   async aboutToAppear() {
 
@@ -119,12 +115,13 @@ struct LoginPage {
           })
           .backgroundColor('#EC5706')
 
-        if(this.haveLoggedIn == true){
-          Button("登录已有账号", { type: ButtonType.Capsule })
-            .width(300)
-            .fontWeight(FontWeight.Medium)
-            .margin({ top:25 })
-            .onClick(() => {
+        //if(this.haveLoggedIn == true){
+        Button("登录已有账号", { type: ButtonType.Capsule })
+          .width(300)
+          .fontWeight(FontWeight.Medium)
+          .margin({ top: 15 })
+          .onClick(() => {
+            if (this.haveLoggedIn == true) {
               router.replaceUrl({
                 url: 'pages/MainPage',
                 params: {
@@ -136,9 +133,10 @@ struct LoginPage {
                   // userName: this.userInfo.avatar
                 }
               })
-            })
-            .backgroundColor('#ff0690ec')
-        }
+            }
+          })
+          .backgroundColor(this.haveLoggedIn == true ? '#ff0690ec' : '#ffcdcdcd')
+        //}
 
 
         if (this.isShowProgress) {
@@ -181,10 +179,10 @@ struct LoginPage {
             url: 'pages/MainPage',
             params: {
 
-              userName:this.userName,
-              token:this.token,
-              userID:this.userID,
-              avatar:this.avatar,
+              userName: this.userName,
+              token: this.token,
+              userID: this.userID,
+              avatar: this.avatar,
 
               // userAccount: this.account,
               // userName: this.userInfo.avatar
@@ -207,7 +205,7 @@ struct LoginPage {
 
     console.info('==== 请求验证码')
     let httpRequest_getCode = http.createHttp();
-    let url:string = CommonConstants.API_HOST + "client/api/parent/getValidCodeByPhone/" + this.account
+    let url: string = CommonConstants.API_HOST + "client/api/parent/getValidCodeByPhone/" + this.account
     httpRequest_getCode.request(// 请求url地址
       url,
       {
@@ -288,8 +286,6 @@ struct LoginPage {
 
   }
 
-
-
   public getUserInfo_HTTP() {
 
     console.info('==== 获取用户信息')
@@ -325,7 +321,7 @@ struct LoginPage {
 
 
         //清求成功
-        if(data.responseCode == 200){
+        if (data.responseCode == 200) {
           this.userInfo = JSON.parse(JSON.parse(json_string))
           this.userName = this.userInfo.childrenName
           this.userID = this.userInfo.id.toString()
@@ -334,7 +330,7 @@ struct LoginPage {
           // 数据持久化
           PreferencesUtil.saveUserName(this.userName)
           PreferencesUtil.saveToken(this.token)
-          PreferencesUtil.saveUserID( this.userID)
+          PreferencesUtil.saveUserID(this.userID)
           PreferencesUtil.saveAvatar(this.avatar)
 
           this.haveLoggedIn = true
@@ -343,7 +339,6 @@ struct LoginPage {
 
           console.info('==== 自动登录失败')
         }
-
 
 
       }
