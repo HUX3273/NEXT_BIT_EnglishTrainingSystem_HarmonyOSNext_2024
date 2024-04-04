@@ -29,21 +29,21 @@ struct MainPage {
 
   async aboutToAppear() {
 
-    // await PreferencesUtil.getUserName().then((value) => {
-    //   this.userName = value;
-    // });
-    //
-    // await PreferencesUtil.getToken().then((value) => {
-    //   this.token = value
-    // });
-    //
-    // await PreferencesUtil.getUserID().then((value) => {
-    //   this.userID = value
-    // });
-    //
-    // await PreferencesUtil.getAvatar().then((value) => {
-    //   this.avatar = value
-    // });
+    await PreferencesUtil.getUserName().then((value) => {
+      this.userName = value;
+    });
+
+    await PreferencesUtil.getToken().then((value) => {
+      this.token = value
+    });
+
+    await PreferencesUtil.getUserID().then((value) => {
+      this.userID = value
+    });
+
+    await PreferencesUtil.getAvatar().then((value) => {
+      this.avatar = value
+    });
   }
 
   build() {

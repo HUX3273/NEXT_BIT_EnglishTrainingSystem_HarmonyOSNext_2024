@@ -41,17 +41,14 @@ struct Play {
   })
   private token: string = (router.getParams() as Record<string, Object>).token as string;
   private srcId: number = (router.getParams() as Record<string, Object>).mediaId as number;
+
   private recordId: number = -1
   studyRecord: StudyRecord = new StudyRecord(-1)
   @State isFullScreen: Boolean = false;
   private radio: number = 1.7
 
   async aboutToAppear() {
-    if (this.mediaType == '我的视频') {
-      this.textFullScreen = false
-    } else if (this.mediaType == '我的音频') {
-      this.textFullScreen = true
-    }
+
     this.exchangeShowMode();
 
     this.startRecord_HTTP()
@@ -77,57 +74,57 @@ struct Play {
 
       if (this.mediaType == '我的视频') {
         // 顶栏
-        if (!this.isFullScreen) {
+        Row() {
+          // 返回上一页
           Row() {
-            // 返回上一页
-            Row() {
-              Image($r('app.media.ic_back'))
-                .width(30)
-                .height(30)
-                .margin({ left: 10 })
-                .onClick(() => {
-                  // 页面跳转
-                  router.back();
-                })
-            }
-            .width('10%')
-            .height(40)
+            Image($r('app.media.ic_back'))
+              .width(30)
+              .height(30)
+              .margin({ left: 10 })
+              .onClick(() => {
+                // 页面跳转
+                router.back();
+              })
+          }
+          .width('10%')
+          .height(40)
 
-            // 展示视频标题
-            Row() {
-              Text(this.mediaName)
-                .fontSize(18)
-                .fontWeight(FontWeight.Medium)
-                .fontWeight(FontWeight.Medium)
-                .maxLines(1)
-
-            }
-            .height(40)
-            .width('80%')
-            .justifyContent(FlexAlign.Center)
-
-            // 搜单词
-            Row() {
-              Image($r('app.media.search'))
-                .width(26)
-                .height(26)
-                .margin({ right: 20 })
-            }
-            .height(40)
-            .width('10%')
-            .onClick(() => {
-              // 点击右上角加号自己搜词
-              this.dialogController_searchMyWord.open()
-
-            })
-
-            //.justifyContent(FlexAlign.Center)
+          // 展示视频标题
+          Row() {
+            Text(this.mediaName)
+              .fontSize(18)
+              .fontWeight(FontWeight.Medium)
+              .fontWeight(FontWeight.Medium)
+              .maxLines(1)
 
           }
-          .width('100%')
-          .backgroundColor('#FFFFFF')
-          .height("5%")
+          .height(40)
+          .width('80%')
+          .justifyContent(FlexAlign.Center)
+
+          // 搜单词
+          Row() {
+            Image($r('app.media.search'))
+              .width(26)
+              .height(26)
+              .margin({ right: 20 })
+          }
+          .height(40)
+          .width('10%')
+          .onClick(() => {
+            // 点击右上角加号自己搜词
+            this.dialogController_searchMyWord.open()
+
+          })
+
+          //.justifyContent(FlexAlign.Center)
+
         }
+        .visibility(this.isFullScreen ? Visibility.Hidden : Visibility.Visible)
+        .width('100%')
+        .backgroundColor('#FFFFFF')
+        .height("5%")
+
 
         // 视频
         Stack() {
@@ -145,43 +142,40 @@ struct Play {
           .height(this.isFullScreen ? '100%' : null)
           .justifyContent(FlexAlign.Center)
           .alignItems(HorizontalAlign.Center)
-          .backgroundColor('#373737')
+          .backgroundColor('#000000')
         }
         .height(this.isFullScreen ? '100%' : this.mediaPlayerHeight)
 
         // 文本阅读器
-        if (!this.isFullScreen) {
-          Column() {
-            Flex({ direction: FlexDirection.Column }) {
-              // 分隔栏
-              Row() {
-              }
-              .height(20)
-              .width('100%')
-              .backgroundColor('#FFE6DA')
-              .justifyContent(FlexAlign.Center)
 
-              // 文本阅读器
-              TextReader({
-                videoName: this.mediaName,
-                subtitleText: this.subtitleText
-              })
-                .height('95%')
-                .width('100%')
-
+        Column() {
+          Flex({ direction: FlexDirection.Column }) {
+            // 分隔栏
+            Row() {
             }
-            .height("100%")
+            .height(20)
+            .width('100%')
+            .backgroundColor('#FFE6DA')
+            .justifyContent(FlexAlign.Center)
+
+            // 文本阅读器
+            TextReader({
+              videoName: this.mediaName,
+              subtitleText: this.subtitleText
+            })
+              .height('95%')
+              .width('100%')
 
           }
-          .height(this.textReaderHeight)
-          .width('100%')
-          .justifyContent(FlexAlign.Center)
+          .height("100%")
+
         }
-
-
+        .visibility(this.isFullScreen ? Visibility.Hidden : Visibility.Visible)
+        .height(this.textReaderHeight)
+        .width('100%')
+        .justifyContent(FlexAlign.Center)
 
       } else if (this.mediaType == '我的音频') {
-
 
 
         // 顶栏
@@ -268,7 +262,6 @@ struct Play {
             .zIndex(0)
         }
         .height(this.isFullScreen ? '100%' : this.mediaPlayerHeight)
-
 
       }
 

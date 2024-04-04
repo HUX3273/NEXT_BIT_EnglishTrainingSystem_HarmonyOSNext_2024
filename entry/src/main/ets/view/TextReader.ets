@@ -32,12 +32,14 @@ export struct TextReader {
 
   private videoName: string = '';
   // 正则表达式
-  private rExpForSplit: RegExp = /[ \n\t><#=+@$%^&*]/; //用于分词
+  private rExpForSplit: RegExp = /[ \n\t]/; //用于分词
   //private rExpForNewline: RegExp = /[A-Z]/;  //用于匹配大写首字母然后换行
+  private rExpForTimeTag_1: RegExp = /[0-9][0-9]:[0-9][0-9]/;   // 用于删除字幕的时间戳
+  private rExpForTimeTag_2: RegExp = /-->/;                     // 用于删除字幕的时间戳
   private rExpForPunctuation: RegExp = /[.。!！?？]/; //用于检测符号换行
   private rExpForWord: RegExp = /[a-zA-Z]+/; //用于提取单词
   private subtitleText: string = '';
-  private fontSize:number = 30;
+  private fontSize:number = 24; // 文本字体大小
   private fontWeight:FontWeight = FontWeight.Bold;
 
   async aboutToAppear() {
@@ -46,7 +48,10 @@ export struct TextReader {
     });
     //this.readfile_from_rawfile();
     // 分词
+
+   // this.wordArr = this.subtitleText.split(this.rExpForTimeTag);
     this.wordArr = this.subtitleText.split(this.rExpForSplit);
+
     //this.wordArr = this.subtitleText.split(" ");
     //初始化 isChosenArr 数组
     for (let index = 0; index < this.wordArr.length; index++) {
@@ -56,82 +61,94 @@ export struct TextReader {
 
 
   build() {
-    Scroll(this.scroller) {
-      Column() {
-        Text() {
-          ForEach(this.wordArr, (item: string, index: number) => {
-            Span(item)
-              .fontSize(this.fontSize)
-              .fontColor(this.isChosenArr[index] == false ? '#000000' : '#EC5706')
-              .fontWeight(this.fontWeight)
-              .onClick(() => {
+    Column(){
+      Scroll(this.scroller) {
+        Column() {
+          Text() {
+            ForEach(this.wordArr, (item: string, index: number) => {
+
+              if(!this.rExpForTimeTag_1.test(item) && !this.rExpForTimeTag_2.test(item)){
+
+                Span(item)
+                  .fontSize(this.fontSize)
+                  .fontColor(this.isChosenArr[index] == false ? '#000000' : '#EC5706')
+                  .fontWeight(this.fontWeight)
+                  .onClick(() => {
+
+                    console.info('==== 您点击了span：', item)
+
+                    if (item.match(this.rExpForWord) != null) {
 
 
-                if (item.match(this.rExpForWord) != null) {
+                      this.chosenWordIndex = index;
+                      this.isChosenArr[index] = true
+
+                      let tempStrArr:Array<string> = ['']
+                      tempStrArr = item.match(this.rExpForWord) as Array<string>
+                      this.word = tempStrArr[0]
+
+                      console.info('==== 您点击了单词：', this.word)
+
+                      // Prompt.showDialog({
+                      //   title:this.word,
+                      //   message:'翻译内容展示',
+                      //
+                      // })
+
+                      //弹出自定义的窗口
+                      if (this.dialogController_translator != undefined) {
+                        this.dialogController_translator.open()
+                      }
 
 
-                  this.chosenWordIndex = index;
-                  this.isChosenArr[index] = true
+                    }
+
+                  })
+                /*
+                    span功能极其有限，不支持长按！！！
+                 */
+                //
+                // .gesture(
+                //   // 绑定可以重复触发的LongPressGesture
+                //   LongPressGesture({ repeat: false })
+                //     .onAction((event: GestureEvent) => {
+                //
+                //         this.chosenWordIndex = index;
+                //         this.isChosenArr[index] = true
+                //
+                //         this.word = item.match(this.rExpForWord)[0]
+                //
+                //         console.info('====您长按了单词：', this.word)
+                //
+                //         //弹出闪卡添加窗口
+                //         this.dialogController_shinyCard.open()
+                //
+                //
+                //     })
+                // )
 
 
-                  let tempStrArr:Array<string> = ['']
-                  tempStrArr = item.match(this.rExpForWord) as Array<string>
-                  this.word = tempStrArr[0]
-
-                  console.info('====您点击了单词：', this.word)
-
-                  // Prompt.showDialog({
-                  //   title:this.word,
-                  //   message:'翻译内容展示',
-                  //
-                  // })
-
-                  //弹出自定义的窗口
-                  if (this.dialogController_translator != undefined) {
-                    this.dialogController_translator.open()
-                  }
-
-
+                // 将单词排版成完整的文本
+                if (this.rExpForPunctuation.test(item)) {
+                  Span('\n') //添加换行符
+                } else {
+                  Span(' ') //添加空格
                 }
 
-              })
-            /*
-                span功能极其有限，不支持长按！！！
-             */
-            //
-            // .gesture(
-            //   // 绑定可以重复触发的LongPressGesture
-            //   LongPressGesture({ repeat: false })
-            //     .onAction((event: GestureEvent) => {
-            //
-            //         this.chosenWordIndex = index;
-            //         this.isChosenArr[index] = true
-            //
-            //         this.word = item.match(this.rExpForWord)[0]
-            //
-            //         console.info('====您长按了单词：', this.word)
-            //
-            //         //弹出闪卡添加窗口
-            //         this.dialogController_shinyCard.open()
-            //
-            //
-            //     })
-            // )
 
+              }
 
-            // 将单词排版成完整的文本
-            if (this.rExpForPunctuation.test(item)) {
-              Span('\n') //添加换行符
-            } else {
-              Span(' ') //添加空格
-            }
-
-          })
+            })
+          }
         }
-      }
-      .margin({bottom:20})
+        .margin({bottom:20})
 
+      }
+      .width('95%').height('100%')
     }
+    .justifyContent(FlexAlign.Center)
+    .alignItems(HorizontalAlign.Center)
+    .width('100%')
     .height('100%')
   }
 

@@ -100,15 +100,6 @@ struct HorizontalItem {
             .width(60).height(60)
             .margin({ left: 8, right: 5 })
 
-          // Text()
-          //   .margin({
-          //     top: 12,
-          //     bottom: 12
-          //   })
-          //   .textAlign(TextAlign.Center)
-          //   .fontSize(16)
-          //   .fontWeight(FontWeight.Medium)
-
         }
 
 
@@ -179,7 +170,7 @@ struct HorizontalItem {
           subtitleText: this.subtitleText,
           token: this.token,
           srcId:this.mediaId,
-
+          subtitleUrl:this.subtitleUrl
         } });
     })
 

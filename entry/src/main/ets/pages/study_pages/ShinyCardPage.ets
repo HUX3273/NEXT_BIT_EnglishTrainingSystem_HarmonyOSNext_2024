@@ -210,18 +210,20 @@ struct ShinyCardPage {
                     // 英文译文
                     TextReader({
                       subtitleText: this.studyList.flashcards[this.pageIndex].enDescription,
-                      scroller:this.scroller,
+                      //scroller:this.scroller,
                       fontSize: 20,
                       fontWeight:FontWeight.Medium
                     })
-                      .margin({ top: 20, left: 20, right: 20 })
+                      .width('100%')
+                      .margin({ top: 20 })
 
 
                   }
+                  .width('100%')
                   .justifyContent(FlexAlign.Start)
                   .alignItems(HorizontalAlign.Start)
                 }
-                .width('100%')
+                .width('95%')
                 .height('25%')
 
                 Image($r('app.media.sideline'))

@@ -64,7 +64,7 @@ export struct HttpPlayer {
   // 界面初始化函数
   async aboutToAppear() {
 
-    this.setScaleType(0)
+    this.setScaleType(1)
 
     if (!this.isFullScreen) {
       this.isFullScreen = false;
