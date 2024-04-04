@@ -7,7 +7,7 @@ import LoginResponse from '../common/constants/LoginResponse';
 import { UserInfo } from '../model/UserInfo';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { window } from '@kit.ArkUI';
+import { promptAction, window } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -30,7 +30,14 @@ struct LoginPage {
   @State userID: string = ''
   @State avatar: string = ''
 
+  private haveLoggedIn: Boolean = false
+
   async aboutToAppear() {
+
+    this.token = await PreferencesUtil.getToken()
+
+    this.getUserInfo_HTTP()
+
 
   }
 
@@ -111,6 +118,28 @@ struct LoginPage {
             this.login();
           })
           .backgroundColor('#EC5706')
+
+        if(this.haveLoggedIn == true){
+          Button("登录已有账号", { type: ButtonType.Capsule })
+            .width(300)
+            .fontWeight(FontWeight.Medium)
+            .margin({ top:25 })
+            .onClick(() => {
+              router.replaceUrl({
+                url: 'pages/MainPage',
+                params: {
+                  userName: this.userName,
+                  token: this.token,
+                  userID: this.userID,
+                  avatar: this.avatar,
+                  // userAccount: this.account,
+                  // userName: this.userInfo.avatar
+                }
+              })
+            })
+            .backgroundColor('#ff0690ec')
+        }
+
 
         if (this.isShowProgress) {
           LoadingProgress()
@@ -259,6 +288,8 @@ struct LoginPage {
 
   }
 
+
+
   public getUserInfo_HTTP() {
 
     console.info('==== 获取用户信息')
@@ -289,26 +320,30 @@ struct LoginPage {
         console.info("==== getUserInfo_HTTP error message:" + err.message)
       } else {
 
-        //清求成功
+
         let json_string = JSON.stringify(data.result)
 
-        this.userInfo = JSON.parse(JSON.parse(json_string))
 
+        //清求成功
+        if(data.responseCode == 200){
+          this.userInfo = JSON.parse(JSON.parse(json_string))
+          this.userName = this.userInfo.childrenName
+          this.userID = this.userInfo.id.toString()
+          this.avatar = this.userInfo.avatar
 
-        console.info("==== phone:" + this.userInfo.phone)
-        console.info("==== children name:" + this.userInfo.childrenName)
+          // 数据持久化
+          PreferencesUtil.saveUserName(this.userName)
+          PreferencesUtil.saveToken(this.token)
+          PreferencesUtil.saveUserID( this.userID)
+          PreferencesUtil.saveAvatar(this.avatar)
 
+          this.haveLoggedIn = true
 
+        } else {
 
-        this.userName = this.userInfo.childrenName
-        this.userID = this.userInfo.id.toString()
-        this.avatar = this.userInfo.avatar
+          console.info('==== 自动登录失败')
+        }
 
-        // 数据持久化
-        PreferencesUtil.saveUserName(this.userName)
-        PreferencesUtil.saveToken(this.token)
-        PreferencesUtil.saveUserID( this.userID)
-        PreferencesUtil.saveAvatar(this.avatar)
 
 
       }

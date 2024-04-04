@@ -20,16 +20,15 @@ import audio from '@ohos.multimedia.audio';
 import { CacheListener, HttpProxyCacheServer, HttpProxyCacheServerBuilder } from '@ohos/video-cache';
 
 import fs from '@ohos.file.fs';
-import MediaLibraryUtils from '../../common/utils/MediaLibraryUtils';
-import CommonConstants from '../../common/constants/CommonConstants';
-import Logger from '../../common/utils/Logger';
-import GlobalProxyServer from '../../common/proxy/GlobalProxyServer';
+import MediaLibraryUtils from '../common/utils/MediaLibraryUtils';
+import CommonConstants from '../common/constants/CommonConstants';
+import Logger from '../common/utils/Logger';
+import GlobalProxyServer from '../common/proxy/GlobalProxyServer';
 import { window } from '@kit.ArkUI';
 import { BusinessError } from '@kit.BasicServicesKit';
 
 const TAG: string = 'MediaDemo HttpPlayer:';
 
-@Entry
 @Component
 export struct HttpPlayer {
   @State ratio: number = 1.7;

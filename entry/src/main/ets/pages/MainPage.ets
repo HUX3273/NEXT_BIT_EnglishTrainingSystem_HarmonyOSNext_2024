@@ -148,8 +148,11 @@ struct MainPage {
                     fontColor: '#D94838',
                     action: () => {
                       console.info('====确认登出');
-                      // TODO 测试时暂时不注销token
-                      //this.logout_HTTP()
+                      this.logout_HTTP()
+                      PreferencesUtil.deleteUserName()
+                      PreferencesUtil.deleteToken()
+                      PreferencesUtil.deleteUserID()
+                      PreferencesUtil.deleteAvatar()
                       // 跳转登出页面
                       router.replaceUrl({
                         url: 'pages/LoginPage',
@@ -287,11 +290,6 @@ struct MainPage {
 
         // 请求失嫩
         console.info("====退出登录成功" + data.responseCode)
-
-        // 删除用户数据
-        PreferencesUtil.deleteToken()
-        PreferencesUtil.deleteUserName()
-
 
       }
     })

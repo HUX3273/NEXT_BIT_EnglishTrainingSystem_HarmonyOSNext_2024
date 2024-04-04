@@ -7,7 +7,7 @@ import { SearchMyWordDialog } from '../../view/SearchMyWordDialog';
 import { StudyRecord } from '../../model/StudyRecord';
 import { StartRecordArgs } from '../../net/request/StartRecordArgs';
 import { EndRecordArgs } from '../../net/request/EndRecordArgs';
-import { HttpPlayer } from './HttpsPlayer';
+import { HttpPlayer } from '../../view/HttpsPlayer';
 
 
 @Entry
