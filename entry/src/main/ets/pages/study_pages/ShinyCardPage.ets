@@ -221,6 +221,7 @@ struct ShinyCardPage {
                   .justifyContent(FlexAlign.Start)
                   .alignItems(HorizontalAlign.Start)
                 }
+                .width('100%')
                 .height('25%')
 
                 Image($r('app.media.sideline'))

@@ -8,6 +8,7 @@ import { http } from '@kit.NetworkKit';
 import CommonConstants from '../../common/constants/CommonConstants';
 import { EndRecordArgs } from '../../net/request/EndRecordArgs';
 import { StudyRecord } from '../../model/StudyRecord';
+import { window } from '@kit.ArkUI';
 
 
 @Entry
@@ -46,11 +47,17 @@ struct PdfBookReader {
 
   async aboutToAppear() {
 
-    console.info("==== token:"+this.token)
-    console.info("==== srcId:"+this.srcId)
-    // 配置Web开启调试模式
-    // web_webview.WebviewController.setWebDebuggingAccess(true);
-    console.info("==== PdfBookReader scr:" + this.bookSrc)
+    // 允许自旋转
+    let orientation:number = window.Orientation.AUTO_ROTATION;// 可选参数：https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V2/js-apis-bundlemanager-0000001427585060-V2
+    try {
+      // 设置屏幕旋转
+      globalThis.windowClass.setPreferredOrientation(orientation, (err:BusinessError) => {});
+      console.info('==== 设置屏幕 orientation 成功' );
+    } catch (exception) {
+      console.error('==== 设置失败: ' + JSON.stringify(exception));
+    }
+
+
     this.pdfUrl = this.bookSrc
 
     // 开始计时
@@ -59,6 +66,16 @@ struct PdfBookReader {
   }
 
   async aboutToDisappear(){
+
+    // 禁止自旋转
+    let orientation:number = window.Orientation.PORTRAIT;// 可选参数：https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V2/js-apis-bundlemanager-0000001427585060-V2
+    try {
+      // 设置屏幕旋转
+      globalThis.windowClass.setPreferredOrientation(orientation, (err:BusinessError) => {});
+      console.info('==== 设置屏幕 orientation 成功' );
+    } catch (exception) {
+      console.error('==== 设置失败: ' + JSON.stringify(exception));
+    }
 
     // 结束计时
     this.endRecord_HTTP()

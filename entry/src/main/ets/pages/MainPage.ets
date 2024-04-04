@@ -4,15 +4,18 @@ import router from '@ohos.router';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import CommonConstants from '../common/constants/CommonConstants';
 import http from '@ohos.net.http';
+import { window } from '@kit.ArkUI';
+import { BusinessError } from '@kit.BasicServicesKit';
 
 @Entry
 @Component
 struct MainPage {
   @State message: string = 'Hello World'
-  @State userName: string = ''
-  @State token: string = ''
-  @State userID: string = ''
-  @State avatar: string = ''
+
+  @State userName: string = (router.getParams() as Record<string, Object>).userName as string;
+  @State token: string = (router.getParams() as Record<string, Object>).token as string;
+  @State userID: string = (router.getParams() as Record<string, Object>).userID as string;
+  @State avatar: string = (router.getParams() as Record<string, Object>).avatar as string;
 
   pageJump(desPage: String): void {
     router.pushUrl({
@@ -25,21 +28,22 @@ struct MainPage {
   }
 
   async aboutToAppear() {
-    await PreferencesUtil.getUserName().then((value) => {
-      this.userName = value;
-    });
 
-    await PreferencesUtil.getToken().then((value) => {
-      this.token = value
-    });
-
-    await PreferencesUtil.getUserID().then((value) => {
-      this.userID = value
-    });
-
-    await PreferencesUtil.getAvatar().then((value) => {
-      this.avatar = value
-    });
+    // await PreferencesUtil.getUserName().then((value) => {
+    //   this.userName = value;
+    // });
+    //
+    // await PreferencesUtil.getToken().then((value) => {
+    //   this.token = value
+    // });
+    //
+    // await PreferencesUtil.getUserID().then((value) => {
+    //   this.userID = value
+    // });
+    //
+    // await PreferencesUtil.getAvatar().then((value) => {
+    //   this.avatar = value
+    // });
   }
 
   build() {

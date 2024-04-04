@@ -39,10 +39,26 @@ export default class EntryAbility extends UIAbility {
 
   onWindowStageCreate(windowStage: window.WindowStage) {
     // Main window is created, set main page for this ability
+
+
+
+    windowStage.getMainWindow((err, data) => {
+      if (err.code) {
+        console.error('==== 获取失败' + JSON.stringify(err));
+        return;
+      }
+      console.info('==== 获取主窗口的实例：' + JSON.stringify(data));
+      globalThis.windowClass = data // 赋值给全局变量windowClass
+    });
+
+
+
+
+
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
 
 
-    windowStage.loadContent('pages/MainPage', (err, data) => {
+    windowStage.loadContent('pages/LoginPage', (err, data) => {
       if (err.code) {
         hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;

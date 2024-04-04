@@ -7,9 +7,7 @@ import { SearchMyWordDialog } from '../../view/SearchMyWordDialog';
 import { StudyRecord } from '../../model/StudyRecord';
 import { StartRecordArgs } from '../../net/request/StartRecordArgs';
 import { EndRecordArgs } from '../../net/request/EndRecordArgs';
-import GlobalProxyServer from '../../common/proxy/GlobalProxyServer';
 import { HttpPlayer } from './HttpsPlayer';
-import { display } from '@kit.ArkUI';
 
 
 @Entry
@@ -45,12 +43,8 @@ struct Play {
   private srcId: number = (router.getParams() as Record<string, Object>).mediaId as number;
   private recordId: number = -1
   studyRecord: StudyRecord = new StudyRecord(-1)
-
-
-
-  private radio:number = 1.7
-
-
+  @State isFullScreen: Boolean = false;
+  private radio: number = 1.7
 
   async aboutToAppear() {
     if (this.mediaType == '我的视频') {
@@ -62,9 +56,11 @@ struct Play {
 
     this.startRecord_HTTP()
 
+
   }
 
   aboutToDisappear() {
+
 
     this.endRecord_HTTP()
 
@@ -78,59 +74,63 @@ struct Play {
 
   build() {
     Column() {
-      // 顶栏
-      Row() {
-        // 返回上一页
+
+      if (!this.isFullScreen) {
+        // 顶栏
         Row() {
-          Image($r('app.media.ic_back'))
-            .width(30)
-            .height(30)
-            .margin({ left: 10 })
-            .onClick(() => {
-              // 页面跳转
-              router.back();
-            })
+          // 返回上一页
+          Row() {
+            Image($r('app.media.ic_back'))
+              .width(30)
+              .height(30)
+              .margin({ left: 10 })
+              .onClick(() => {
+                // 页面跳转
+                router.back();
+              })
+          }
+          .width('10%')
+          .height(40)
+
+          // 展示视频标题
+          Row() {
+            Text(this.mediaName)
+              .fontSize(18)
+              .fontWeight(FontWeight.Medium)
+              .fontWeight(FontWeight.Medium)
+              .maxLines(1)
+
+          }
+          .height(40)
+          .width('80%')
+          .justifyContent(FlexAlign.Center)
+
+          // 搜单词
+          Row() {
+            Image($r('app.media.search'))
+              .width(26)
+              .height(26)
+              .margin({ right: 20 })
+          }
+          .height(40)
+          .width('10%')
+          .onClick(() => {
+            // 点击右上角加号自己搜词
+            this.dialogController_searchMyWord.open()
+
+          })
+
+          //.justifyContent(FlexAlign.Center)
+
         }
-        .width('10%')
-        .height(40)
-
-        // 展示视频标题
-        Row() {
-          Text(this.mediaName)
-            .fontSize(18)
-            .fontWeight(FontWeight.Medium)
-            .fontWeight(FontWeight.Medium)
-            .maxLines(1)
-
-        }
-        .height(40)
-        .width('80%')
-        .justifyContent(FlexAlign.Center)
-
-        // 搜单词
-        Row() {
-          Image($r('app.media.search'))
-            .width(26)
-            .height(26)
-            .margin({ right: 20 })
-        }
-        .height(40)
-        .width('10%')
-        .onClick(() => {
-          // 点击右上角加号自己搜词
-          this.dialogController_searchMyWord.open()
-
-        })
-
-        //.justifyContent(FlexAlign.Center)
-
+        .width('100%')
+        .backgroundColor('#FFFFFF')
+        .height("5%")
       }
-      .width('100%')
-      .backgroundColor('#FFFFFF')
-      .height("5%")
 
-      // 视频区
-      // 视频缓存播放
+
+      // 视频区 视频缓存播放
+
       Stack() {
 
         // if (this.mediaType == '我的视频') {
@@ -162,7 +162,7 @@ struct Play {
         // }
 
 
-        if(this.mediaType == '我的音频'){
+        if (this.mediaType == '我的音频') {
 
           VideoPlayer({
             videoSrc: this.mediaSrc,
@@ -173,67 +173,76 @@ struct Play {
 
         }
 
-        else if(this.mediaType == '我的视频'){
+        else if (this.mediaType == '我的视频') {
 
-          HttpPlayer({
-            SRC_LIST:[this.mediaSrc],
-            videoName:this.mediaSrc,
-            ratio:this.radio
-
-          })
-            .backgroundColor('#5fffff')
-            .zIndex(0)
+          Column() {
+            HttpPlayer({
+              SRC_LIST: [this.mediaSrc],
+              videoName: this.mediaSrc,
+              ratio: this.radio,
+              isFullScreen: $isFullScreen
+            })
+              .width(this.isFullScreen ? '72%' : '100%')
+              .zIndex(0)
+          }
+          .width('100%')
+          .height(this.isFullScreen ? '100%':null)
+          .justifyContent(FlexAlign.Center)
+          .alignItems(HorizontalAlign.Center)
+          .backgroundColor('#373737')
 
         }
 
 
-
-
-
       }
-      .height(this.mediaPlayerHeight)
+      .height(this.isFullScreen ? '100%':this.mediaPlayerHeight)
 
 
-      Column() {
+      if (!this.isFullScreen) {
+        // 文本阅读器
+        Column() {
 
-        Flex({ direction: FlexDirection.Column }) {
+          Flex({ direction: FlexDirection.Column }) {
 
-          // 文本全屏or缩回按钮
-          Row() {
-            // Image(this.exchangeFullScreenIcon)
-            //   .height(30)
-            //   .width(40)
-          }
-          .height(20)
-          .width('100%')
-          .backgroundColor('#FFE6DA')
-          // .onClick(() => {
-          //
-          //   this.exchangeShowMode();
-          //
-          //   this.textFullScreen = !this.textFullScreen;
-          //
-          // })
-          .justifyContent(FlexAlign.Center)
-
-
-          // 文本阅读器
-          TextReader({
-            videoName: this.mediaName,
-            subtitleText: this.subtitleText
-          })
-            .height('95%')
+            // 文本全屏or缩回按钮
+            Row() {
+              // Image(this.exchangeFullScreenIcon)
+              //   .height(30)
+              //   .width(40)
+            }
+            .height(20)
             .width('100%')
+            .backgroundColor('#FFE6DA')
+            // .onClick(() => {
+            //
+            //   this.exchangeShowMode();
+            //
+            //   this.textFullScreen = !this.textFullScreen;
+            //
+            // })
+            .justifyContent(FlexAlign.Center)
+
+
+            // 文本阅读器
+            TextReader({
+              videoName: this.mediaName,
+              subtitleText: this.subtitleText
+            })
+              .height('95%')
+              .width('100%')
             //.backgroundColor('#1fffff')
 
-        }
-        .height("100%")
+          }
+          .height("100%")
 
+        }
+        //.backgroundColor('#f11111')
+        .height(this.textReaderHeight)
+        .width('100%')
+        .justifyContent(FlexAlign.Center)
       }
-      //.backgroundColor('#f11111')
-      .height(this.textReaderHeight)
-      .width('100%')
-      .justifyContent(FlexAlign.Center)
+
+
     }
     .height('100%')
     .justifyContent(FlexAlign.SpaceBetween)

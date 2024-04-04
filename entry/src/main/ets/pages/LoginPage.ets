@@ -7,6 +7,7 @@ import LoginResponse from '../common/constants/LoginResponse';
 import { UserInfo } from '../model/UserInfo';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { window } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -16,7 +17,7 @@ struct LoginPage {
   @State isShowProgress: boolean = false;
   @State format: string = 'ss'
   @State getCodeInCD: boolean = false;
-  @State token: string = '' // 登录成功后返回的凭证
+
   @State paidMember: boolean = false; // 登录成功，是否为付费用户
   textTimerController: TextTimerController = new TextTimerController()
   // private timeOutId: number = -1;
@@ -24,7 +25,10 @@ struct LoginPage {
   private loginSucceed: boolean = false;
   private userInfo: UserInfo = new UserInfo(0, '', '', '', '');
 
-
+  @State userName: string = ''
+  @State token: string = ''
+  @State userID: string = ''
+  @State avatar: string = ''
 
   async aboutToAppear() {
 
@@ -147,6 +151,12 @@ struct LoginPage {
           router.replaceUrl({
             url: 'pages/MainPage',
             params: {
+
+              userName:this.userName,
+              token:this.token,
+              userID:this.userID,
+              avatar:this.avatar,
+
               // userAccount: this.account,
               // userName: this.userInfo.avatar
             }
@@ -289,11 +299,16 @@ struct LoginPage {
         console.info("==== children name:" + this.userInfo.childrenName)
 
 
+
+        this.userName = this.userInfo.childrenName
+        this.userID = this.userInfo.id.toString()
+        this.avatar = this.userInfo.avatar
+
         // 数据持久化
-        PreferencesUtil.saveUserName(this.userInfo.childrenName)
+        PreferencesUtil.saveUserName(this.userName)
         PreferencesUtil.saveToken(this.token)
-        PreferencesUtil.saveUserID(this.userInfo.id.toString())
-        PreferencesUtil.saveAvatar(this.userInfo.avatar)
+        PreferencesUtil.saveUserID( this.userID)
+        PreferencesUtil.saveAvatar(this.avatar)
 
 
       }
