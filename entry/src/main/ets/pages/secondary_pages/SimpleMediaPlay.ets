@@ -73,57 +73,59 @@ struct Play {
     Column() {
 
       if (this.mediaType == '我的视频') {
-        // 顶栏
-        Row() {
-          // 返回上一页
+        if(!this.isFullScreen){
+          // 顶栏
           Row() {
-            Image($r('app.media.ic_back'))
-              .width(30)
-              .height(30)
-              .margin({ left: 10 })
-              .onClick(() => {
-                // 页面跳转
-                router.back();
-              })
+            // 返回上一页
+            Row() {
+              Image($r('app.media.ic_back'))
+                .width(30)
+                .height(30)
+                .margin({ left: 10 })
+                .onClick(() => {
+                  // 页面跳转
+                  router.back();
+                })
+            }
+            .width('10%')
+            .height(40)
+
+            // 展示视频标题
+            Row() {
+              Text(this.mediaName)
+                .fontSize(18)
+                .fontWeight(FontWeight.Medium)
+                .fontWeight(FontWeight.Medium)
+                .maxLines(1)
+
+            }
+            .height(40)
+            .width('80%')
+            .justifyContent(FlexAlign.Center)
+
+            // 搜单词
+            Row() {
+              Image($r('app.media.search'))
+                .width(26)
+                .height(26)
+                .margin({ right: 20 })
+            }
+            .height(40)
+            .width('10%')
+            .onClick(() => {
+              // 点击右上角加号自己搜词
+              this.dialogController_searchMyWord.open()
+
+            })
+
+            //.justifyContent(FlexAlign.Center)
+
           }
-          .width('10%')
-          .height(40)
-
-          // 展示视频标题
-          Row() {
-            Text(this.mediaName)
-              .fontSize(18)
-              .fontWeight(FontWeight.Medium)
-              .fontWeight(FontWeight.Medium)
-              .maxLines(1)
-
-          }
-          .height(40)
-          .width('80%')
-          .justifyContent(FlexAlign.Center)
-
-          // 搜单词
-          Row() {
-            Image($r('app.media.search'))
-              .width(26)
-              .height(26)
-              .margin({ right: 20 })
-          }
-          .height(40)
-          .width('10%')
-          .onClick(() => {
-            // 点击右上角加号自己搜词
-            this.dialogController_searchMyWord.open()
-
-          })
-
-          //.justifyContent(FlexAlign.Center)
-
+          .width('100%')
+          .backgroundColor('#FFFFFF')
+          .height("5%")
         }
-        .visibility(this.isFullScreen ? Visibility.Hidden : Visibility.Visible)
-        .width('100%')
-        .backgroundColor('#FFFFFF')
-        .height("5%")
+
 
 
         // 视频

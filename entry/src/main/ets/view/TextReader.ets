@@ -1,8 +1,5 @@
-import util from '@ohos.util';
-import Prompt from '@system.prompt';
 import PreferencesUtil from '../common/database/PreferencesUtil';
-import { WordTranslatorDialog } from './WordTranslatorDialog'
-
+import { WordTranslatorDialog } from './WordTranslatorDialog';
 
 
 @Component
@@ -15,7 +12,6 @@ export struct TextReader {
   @Provide isChosenArr: Array<Boolean> = []; //存该分词是否被选中
   @Provide chosenWordIndex: number = 0;
   scroller: Scroller = new Scroller();
-
   //新建单击查词的窗口控制器
   dialogController_translator: CustomDialogController = new CustomDialogController({
     builder: WordTranslatorDialog({
@@ -29,27 +25,26 @@ export struct TextReader {
     gridCount: 4,
     customStyle: false
   })
-
   private videoName: string = '';
   // 正则表达式
   private rExpForSplit: RegExp = /[ \n\t]/; //用于分词
   //private rExpForNewline: RegExp = /[A-Z]/;  //用于匹配大写首字母然后换行
-  private rExpForTimeTag_1: RegExp = /[0-9][0-9]:[0-9][0-9]/;   // 用于删除字幕的时间戳
-  private rExpForTimeTag_2: RegExp = /-->/;                     // 用于删除字幕的时间戳
+  private rExpForTimeTag_1: RegExp = /[0-9][0-9]:[0-9][0-9]/; // 用于删除字幕的时间戳日期
+  private rExpForTimeTag_2: RegExp = /-->/; // 用于删除字幕的时间戳-->
   private rExpForPunctuation: RegExp = /[.。!！?？]/; //用于检测符号换行
   private rExpForWord: RegExp = /[a-zA-Z]+/; //用于提取单词
-  private subtitleText: string = '';
-  private fontSize:number = 24; // 文本字体大小
-  private fontWeight:FontWeight = FontWeight.Bold;
+  private subtitleText: string = 'NOTHING FOUND~';
+  private fontSize: number = 24; // 文本字体大小
+  private fontWeight: FontWeight = FontWeight.Bold;
 
   async aboutToAppear() {
     await PreferencesUtil.getToken().then((value) => {
       this.token = value
     });
     //this.readfile_from_rawfile();
-    // 分词
 
-   // this.wordArr = this.subtitleText.split(this.rExpForTimeTag);
+    // 分词
+    // this.wordArr = this.subtitleText.split(this.rExpForTimeTag);
     this.wordArr = this.subtitleText.split(this.rExpForSplit);
 
     //this.wordArr = this.subtitleText.split(" ");
@@ -59,15 +54,14 @@ export struct TextReader {
     }
   }
 
-
   build() {
-    Column(){
+    Column() {
       Scroll(this.scroller) {
         Column() {
           Text() {
             ForEach(this.wordArr, (item: string, index: number) => {
 
-              if(!this.rExpForTimeTag_1.test(item) && !this.rExpForTimeTag_2.test(item)){
+              if (!this.rExpForTimeTag_1.test(item) && !this.rExpForTimeTag_2.test(item)) {
 
                 Span(item)
                   .fontSize(this.fontSize)
@@ -83,7 +77,7 @@ export struct TextReader {
                       this.chosenWordIndex = index;
                       this.isChosenArr[index] = true
 
-                      let tempStrArr:Array<string> = ['']
+                      let tempStrArr: Array<string> = ['']
                       tempStrArr = item.match(this.rExpForWord) as Array<string>
                       this.word = tempStrArr[0]
 
@@ -141,7 +135,7 @@ export struct TextReader {
             })
           }
         }
-        .margin({bottom:20})
+        .margin({ bottom: 20 })
 
       }
       .width('95%').height('100%')
@@ -167,7 +161,6 @@ export struct TextReader {
     this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
 
   }
-
 
   //  仅供本地测试，接入后端后废弃
   // 从rawfile中取字幕文件

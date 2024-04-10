@@ -59,6 +59,14 @@
     {
       "name": "empty",
       "value": "Empty"
+    },
+    {
+      "name": "record_location_reason",
+      "value": "获取用户定位"
+    },
+    {
+      "name": "read_media",
+      "value": "获取读取权限"
     }
   ]
 }
