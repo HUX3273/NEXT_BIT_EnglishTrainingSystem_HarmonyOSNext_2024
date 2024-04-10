@@ -1,14 +1,13 @@
-import http from '@ohos.net.http';
-import CommonConstants from '../common/constants/CommonConstants';
-
-import { ShinyCardPictureItem } from '../viewmodel/ChooseShinyCardPicture';
 import promptAction from '@ohos.promptAction';
-import { AddFlashCardArgs } from '../net/request/AddFlashCardArgs';
-import { FlashCard } from '../model/FlashCard';
-import { UpdateFlashCardArgs } from '../net/request/UpdateFlashCardArgs';
 import { MediaBean } from '../model/MediaBean';
 import { MediaHelper } from '../common/utils/MediaHelper';
 import { common } from '@kit.AbilityKit';
+import { BusinessError, request } from '@kit.BasicServicesKit';
+import CommonConstants from '../common/constants/CommonConstants';
+import fs from '@ohos.file.fs';
+
+let context = getContext(this) as common.UIAbilityContext;
+let cacheDir = context.cacheDir;
 
 
 @CustomDialog
@@ -28,11 +27,7 @@ export struct AddMyImageDialog {
     false, false, false, false, false, false,
     false, false, false, false, false, false]; //存http获取的图片链接的选中信息
   private maxPicNum: number = 5;
-
-
   controller: CustomDialogController
-
-
 
   // 若尝试在CustomDialog中传入多个其他的Controller，以实现在CustomDialog中打开另一个或另一些CustomDialog，那么此处需要将指向自己的controller放在最后
   onCancel() {
@@ -45,7 +40,7 @@ export struct AddMyImageDialog {
     //this.isChosenArr[this.chosenWordIndex] = false //取消选中后解除单词的选中状态
   }
 
-  @Link mediaBean: MediaBean ;
+  @Link mediaBean: MediaBean;
   private mediaHelper: MediaHelper = new MediaHelper(getContext());
   private context = getContext(this) as common.UIAbilityContext
 
@@ -64,7 +59,7 @@ export struct AddMyImageDialog {
         .margin({ top: 20, bottom: 10 })
         .height("10%")
 
-      Column(){
+      Column() {
         Image(this.mediaBean.localUrl)
           .width('80%').height('80%')
           .borderRadius(15)
@@ -89,7 +84,6 @@ export struct AddMyImageDialog {
         this.handleClick(MediaOption.Picture)
       })
       .width('50%')
-
 
 
       Row() {
@@ -119,7 +113,6 @@ export struct AddMyImageDialog {
             this.uploadImageForFlashCard_HTTP()
 
 
-
             this.onAccept()
             this.controller.close()
 
@@ -142,194 +135,77 @@ export struct AddMyImageDialog {
     // dialog默认的borderRadius为24vp，如果需要使用border属性，请和borderRadius属性一起使用。
   }
 
-  //
-  // // 添加闪卡（全新单词才能用此接口）
-  // addFlashCard_HTTP(imagesUrl: Array<string>) {
-  //
-  //
-  //   console.info('==== 添加闪卡')
-  //
-  //
-  //   // BODY
-  //   let addFlashCardArgs: string = JSON.stringify(new AddFlashCardArgs(this.word, imagesUrl))
-  //
-  //   // REQUEST
-  //   let httpRequest_addFlashCard = http.createHttp();
-  //   let url = CommonConstants.API_HOST + "client/api/flashcard"
-  //   httpRequest_addFlashCard.request(// 请求url地址
-  //     url,
-  //     {
-  //       // 请求方式
-  //       method: http.RequestMethod.POST,
-  //
-  //       // 可选，默认为60s
-  //       connectTimeout: 60000,
-  //       // 可选，默认为60s
-  //       readTimeout: 60000,
-  //       // 开发者根据自身业务需要添加header字段
-  //       header: {
-  //         'Cookie': 'SESSION_ID=' + this.token,
-  //         'Content-Type': 'application/json'
-  //       },
-  //       // 请求的额外数据。
-  //       extraData: addFlashCardArgs
-  //
-  //     }, (err, data) => {
-  //     if (err) {
-  //       // 请求失嫩
-  //       console.info("==== addFlashCard_HTTP error code:" + err.code)
-  //       console.info("==== addFlashCard_HTTP error message:" + err.message)
-  //     } else {
-  //       // 请求成功
-  //       // let json_string = JSON.stringify(data.result)
-  //       //
-  //       // this.training = JSON.parse(JSON.parse(json_string))
-  //       // console.info("==== responseCod:" + data.responseCode)
-  //       // console.info("==== resultType:" + data.resultType)
-  //       // console.info("==== result:" + data.result)
-  //
-  //       if (data.responseCode == 200) {
-  //         console.info("==== 添加闪卡成功！")
-  //         promptAction.showToast({
-  //           message: "添加闪卡成功！"
-  //         })
-  //
-  //       } else {
-  //         console.info("==== 添加闪卡失败")
-  //         promptAction.showDialog({
-  //           message: "添加失败，请稍后重试......"
-  //         })
-  //       }
-  //
-  //     }
-  //
-  //   })
-  //
-  // }
-  //
-  // // 更新闪卡的接口
-  // updateFlashCard_HTTP(imagesUrl: Array<string>) {
-  //
-  //
-  //   console.info('==== 更新闪卡')
-  //
-  //
-  //   // BODY
-  //   let updateFlashCardArgs: string = JSON.stringify(new UpdateFlashCardArgs(this.wordId, imagesUrl, true, this.word))
-  //
-  //   // REQUEST
-  //   let httpRequest_addFlashCard = http.createHttp();
-  //   let url = CommonConstants.API_HOST + "client/api/flashcard"
-  //   httpRequest_addFlashCard.request(// 请求url地址
-  //     url,
-  //     {
-  //       // 请求方式
-  //       method: http.RequestMethod.PUT,
-  //
-  //       // 可选，默认为60s
-  //       connectTimeout: 60000,
-  //       // 可选，默认为60s
-  //       readTimeout: 60000,
-  //       // 开发者根据自身业务需要添加header字段
-  //       header: {
-  //         'Cookie': 'SESSION_ID=' + this.token,
-  //         'Content-Type': 'application/json'
-  //       },
-  //       // 请求的额外数据。
-  //       extraData: updateFlashCardArgs
-  //
-  //     }, (err, data) => {
-  //     if (err) {
-  //       // 请求失嫩
-  //       console.info("==== updateFlashCard_HTTP error code:" + err.code)
-  //       console.info("==== updateFlashCard_HTTP error message:" + err.message)
-  //     } else {
-  //       // 请求成功
-  //       // let json_string = JSON.stringify(data.result)
-  //       //
-  //       // this.training = JSON.parse(JSON.parse(json_string))
-  //       // console.info("==== responseCod:" + data.responseCode)
-  //       // console.info("==== resultType:" + data.resultType)
-  //       // console.info("==== result:" + data.result)
-  //
-  //       if (data.responseCode == 200) {
-  //         console.info("==== 更新闪卡成功！")
-  //         promptAction.showToast({
-  //           message: "更新闪卡成功！"
-  //         })
-  //
-  //       } else {
-  //         console.info("==== 更新闪卡失败")
-  //         promptAction.showDialog({
-  //           message: "更新失败，请稍后重试......"
-  //         })
-  //       }
-  //
-  //     }
-  //
-  //   })
-  //
-  //
-  // }
-  //
-
-  uploadImageForFlashCard_HTTP(){
+  uploadImageForFlashCard_HTTP() {
     console.info('==== 闪卡图片上传')
 
-      // BODY
-      //let addFlashCardArgs: string = JSON.stringify(new AddFlashCardArgs(this.word, imagesUrl))
+    // console.info("==== 本地图片链接：" + this.mediaBean.localUrl)
 
-      // REQUEST
-      let httpRequest_uploadImageForFlashCard = http.createHttp();
-      let url = CommonConstants.API_HOST + "client/api/flashcard/image/upload"
-    httpRequest_uploadImageForFlashCard.request(// 请求url地址
-        url,
-        {
-          // 请求方式
-          method: http.RequestMethod.POST,
+    // 读取图片本地 uri
+    let file = fs.openSync(this.mediaBean.localUrl, fs.OpenMode.CREATE);
+    // 复制文件到缓存目录下
+    fs.copyFileSync(file.fd, cacheDir + '/test.jpg')
 
-          // 可选，默认为60s
-          connectTimeout: 60000,
-          // 可选，默认为60s
-          readTimeout: 60000,
-          // 开发者根据自身业务需要添加header字段
-          header: {
-            'Cookie': 'SESSION_ID=' + this.token,
-            'Content-Type': 'application/json'
-          },
-          // 请求的额外数据。
-          //extraData: addFlashCardArgs
 
-        }, (err, data) => {
-        if (err) {
-          // 请求失嫩
-          console.info("==== uploadImageForFlashCard_HTTP error code:" + err.code)
-          console.info("==== uploadImageForFlashCard_HTTP error message:" + err.message)
-        } else {
-          // 请求成功
-          // let json_string = JSON.stringify(data.result)
-          //
-          // this.training = JSON.parse(JSON.parse(json_string))
-          // console.info("==== responseCod:" + data.responseCode)
-          // console.info("==== resultType:" + data.resultType)
-          // console.info("==== result:" + data.result)
+    let uploadConfig: request.UploadConfig = {
+      url: CommonConstants.API_HOST + "client/api/flashcard/image/upload",
+      header: {
+        'Accept': '*/*',
+        'Cookie': 'SESSION_ID=' + this.token,
+        'Content-Type': 'multipart/form-data'
+      },
+      method: 'POST',
+      files: [
+        { filename: this.word, name: 'file', uri: 'internal://cache/test.jpg', type: 'jpg' }
+      ],
+      data: [
+        { name: 'keyword', value: this.word }
+      ],
+    }
 
-          if (data.responseCode == 200) {
-            console.info("==== 上传闪卡图片成功！")
-            promptAction.showToast({
-              message: "上传闪卡图片成功！"
-            })
+    let uploadTask: request.UploadTask;
 
-          } else {
-            console.info("==== 上传闪卡图片失败")
-            promptAction.showDialog({
-              message: "上传闪卡图片失败，请稍后重试......"
-            })
+    try {
+      request.uploadFile(getContext(), uploadConfig).then((data: request.UploadTask) => {
+        uploadTask = data;
+
+
+        uploadTask.on('progress', (uploadedSize, totalSize) => {
+          console.info("==== upload totalSize:" + totalSize + "  uploadedSize:" + uploadedSize);
+        })
+
+        let headerCallback = (headers: object) => {
+          console.info("==== upOnHeader headers:" + JSON.stringify(headers));
+        };
+        uploadTask.on('headerReceive', headerCallback);
+
+
+        let upCompleteCallback = (taskStates: Array<request.TaskState>) => {
+          for (let i = 0; i < taskStates.length; i++) {
+            console.info("==== upOnComplete taskState:" + JSON.stringify(taskStates[i]));
           }
+        };
+        uploadTask.on('complete', upCompleteCallback);
 
-        }
 
+        promptAction.showToast({
+          message: "上传闪卡图片成功！"
+        })
+      }
+      ).catch((err: BusinessError) => {
+        console.error(`==== Failed to request the upload. Code: ${err.code}, message: ${err.message}`);
+        promptAction.showDialog({
+          message: "上传闪卡图片失败，请稍后重试......"
+        })
+      });
+
+
+    } catch (err) {
+      console.error(`==== Failed to request the upload. err: ${JSON.stringify(err)}`);
+      promptAction.showDialog({
+        message: "上传闪卡图片失败，请稍后重试......"
       })
+    }
+
 
   }
 
@@ -349,8 +225,6 @@ export struct AddMyImageDialog {
     }
 
   }
-
-
 }
 
 

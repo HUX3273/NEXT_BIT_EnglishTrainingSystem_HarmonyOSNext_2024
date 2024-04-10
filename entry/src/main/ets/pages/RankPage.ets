@@ -134,8 +134,8 @@ struct RankPage {
               { value: '视频' },
               { value: '音频' },
               { value: '闪卡'}])
-              .selected(0)
-              .value('绘本')
+              .selected(2)
+              .value('音频')
               .font({ size: 16, weight: 500 })
               .fontColor('#182431')
               .selectedOptionFont({ size: 16, weight: 400 })

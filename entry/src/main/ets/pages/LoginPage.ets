@@ -98,8 +98,8 @@ struct LoginPage {
           .fontColor(Color.Black)
           .fontSize(50)
           .onTimer((utc: number, elapsedTime: number) => {
-            //console.info('====textTimer notCountDown utc is：' + utc + ', elapsedTime: ' + elapsedTime)
-            if (elapsedTime >= this.CD) {
+            console.info('====textTimer notCountDown utc is：' + utc + ', elapsedTime: ' + elapsedTime)
+            if (elapsedTime >= this.CD/1000) {
               this.getCodeInCD = false
               this.textTimerController.reset()
             }
@@ -136,14 +136,15 @@ struct LoginPage {
             }
           })
           .backgroundColor(this.haveLoggedIn == true ? '#ff0690ec' : '#ffcdcdcd')
-        //}
 
 
-        if (this.isShowProgress) {
-          LoadingProgress()
-            .width(60).height(60)
-            .margin({ top: '30vp' })
-        }
+
+
+        LoadingProgress()
+          .width(60).height(60)
+          .margin({ top: '30vp' })
+          .visibility(this.isShowProgress ? Visibility.Visible : Visibility.Hidden)
+
 
       }
       .height("60%")
@@ -159,6 +160,7 @@ struct LoginPage {
     .justifyContent(FlexAlign.Center)
   }
 
+
   // 登录
   login(): void {
     if (this.account == '' || this.captcha == '') {
@@ -167,6 +169,7 @@ struct LoginPage {
       })
 
     } else {
+
       this.isShowProgress = true;
 
       // 登录
@@ -178,14 +181,10 @@ struct LoginPage {
           router.replaceUrl({
             url: 'pages/MainPage',
             params: {
-
               userName: this.userName,
               token: this.token,
               userID: this.userID,
               avatar: this.avatar,
-
-              // userAccount: this.account,
-              // userName: this.userInfo.avatar
             }
           })
         } else {
