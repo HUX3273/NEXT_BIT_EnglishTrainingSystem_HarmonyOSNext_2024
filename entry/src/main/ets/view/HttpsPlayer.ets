@@ -84,7 +84,7 @@ export struct HttpPlayer {
 
   // 界面销毁监听
   async aboutToDisappear(): Promise<void> {
-    //设置显示bar
+    // 恢复显示bar
     let names = ['status', 'navigation'];
     try {
       globalThis.windowClass.setWindowSystemBarEnable(names, (err: BusinessError) => {

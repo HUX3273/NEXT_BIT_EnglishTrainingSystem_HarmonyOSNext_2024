@@ -7,6 +7,7 @@ import LoginResponse from '../common/constants/LoginResponse';
 import { UserInfo } from '../model/UserInfo';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { ChangeAccountDialog } from '../view/ChangeAccountDialog';
 
 @Entry
 @Component
@@ -26,11 +27,23 @@ struct LoginPage {
   @State token: string = ''
   @State userID: string = ''
   @State avatar: string = ''
+  @State accountIndex: number = 0
   @State haveLoggedIn: Boolean = false
+  dialogController_changeAccount: CustomDialogController = new CustomDialogController({
+    builder: ChangeAccountDialog({}),
+    autoCancel: true,
+    alignment: DialogAlignment.Center,
+    offset: { dx: 0, dy: -20 },
+    gridCount: 4,
+    customStyle: false
+  })
 
   async aboutToAppear() {
 
     this.token = await PreferencesUtil.getToken()
+    if (this.token == '') {
+      this.token = await PreferencesUtil.getToken_1()
+    }
 
     this.getUserInfo_HTTP()
 
@@ -99,7 +112,7 @@ struct LoginPage {
           .fontSize(50)
           .onTimer((utc: number, elapsedTime: number) => {
             console.info('====textTimer notCountDown utc is：' + utc + ', elapsedTime: ' + elapsedTime)
-            if (elapsedTime >= this.CD/1000) {
+            if (elapsedTime >= this.CD / 1000) {
               this.getCodeInCD = false
               this.textTimerController.reset()
             }
@@ -122,29 +135,27 @@ struct LoginPage {
           .margin({ top: 15 })
           .onClick(() => {
             if (this.haveLoggedIn == true) {
-              router.replaceUrl({
-                url: 'pages/MainPage',
-                params: {
-                  userName: this.userName,
-                  token: this.token,
-                  userID: this.userID,
-                  avatar: this.avatar,
-                  // userAccount: this.account,
-                  // userName: this.userInfo.avatar
-                }
-              })
+              // router.replaceUrl({
+              //   url: 'pages/MainPage',
+              //   params: {
+              //     userName: this.userName,
+              //     token: this.token,
+              //     userID: this.userID,
+              //     avatar: this.avatar,
+              //     accountIndex: this.accountIndex
+              //     // userAccount: this.account,
+              //     // userName: this.userInfo.avatar
+              //   }
+              // })
+              this.dialogController_changeAccount.open()
             }
           })
           .backgroundColor(this.haveLoggedIn == true ? '#ff0690ec' : '#ffcdcdcd')
-
-
-
 
         LoadingProgress()
           .width(60).height(60)
           .margin({ top: '30vp' })
           .visibility(this.isShowProgress ? Visibility.Visible : Visibility.Hidden)
-
 
       }
       .height("60%")
@@ -160,18 +171,14 @@ struct LoginPage {
     .justifyContent(FlexAlign.Center)
   }
 
-
   // 登录
   login(): void {
     if (this.account == '' || this.captcha == '') {
       prompt.showToast({
         message: $r('app.string.input_empty_tips')
       })
-
     } else {
-
       this.isShowProgress = true;
-
       // 登录
       this.loginBySms_HTTP()
 
@@ -194,8 +201,6 @@ struct LoginPage {
           })
         }
       }, 2000)
-
-
     }
   }
 
@@ -288,9 +293,7 @@ struct LoginPage {
   public getUserInfo_HTTP() {
 
     console.info('==== 获取用户信息')
-
     let url = CommonConstants.API_HOST + "client/api/parent/detail"
-
     let httpRequest_getUserInfo = http.createHttp();
     httpRequest_getUserInfo.request(// 请求url地址
       url,
@@ -308,7 +311,7 @@ struct LoginPage {
           'Content-Type': 'application/json'
         },
 
-      }, (err, data) => {
+      }, async (err, data) => {
       if (err) {
         //请求失嫩
         console.info("==== getUserInfo_HTTP error code:" + err.code)
@@ -327,10 +330,20 @@ struct LoginPage {
           this.avatar = this.userInfo.avatar
 
           // 数据持久化
-          PreferencesUtil.saveUserName(this.userName)
-          PreferencesUtil.saveToken(this.token)
-          PreferencesUtil.saveUserID(this.userID)
-          PreferencesUtil.saveAvatar(this.avatar)
+          if (await PreferencesUtil.getUserID() == '' && await PreferencesUtil.getUserID_1() != this.userID) {
+            this.accountIndex = 0
+            PreferencesUtil.saveUserName(this.userName)
+            PreferencesUtil.saveToken(this.token)
+            PreferencesUtil.saveUserID(this.userID)
+            PreferencesUtil.saveAvatar(this.avatar)
+          } else if (await PreferencesUtil.getUserID_1() == '' && await PreferencesUtil.getUserID() != this.userID) { // 不重复记录同一个账号
+            this.accountIndex = 1
+            PreferencesUtil.saveUserName_1(this.userName)
+            PreferencesUtil.saveToken_1(this.token)
+            PreferencesUtil.saveUserID_1(this.userID)
+            PreferencesUtil.saveAvatar_1(this.avatar)
+          }
+
 
           this.haveLoggedIn = true
 

@@ -16,18 +16,16 @@ struct MouthPage {
 
 
   backToMainPage():void{
-    router.replaceUrl({
-      url: 'pages/MainPage',
-    });
+    router.back()
 
   }
 
 
   async aboutToAppear() {
 
-    await PreferencesUtil.getToken().then((value) => {
-      this.token = value
-    });
+    // await PreferencesUtil.getToken().then((value) => {
+    //   this.token = value
+    // });
 
     this.getTrainingList_HTTP()
 
@@ -80,9 +78,7 @@ struct MouthPage {
 
       List() {
         ListItem() {
-          MultiMediaModule({
-            moduleName: '我的视频'
-          })
+          MultiMediaModule({ moduleName: '我的视频',token: this.token })
             .margin({ top: 20 })
         }
 

@@ -27,10 +27,14 @@ export struct TextReader {
   })
   private videoName: string = '';
   // 正则表达式
-  private rExpForSplit: RegExp = /[ \n\t]/; //用于分词
+  private rExpForSplit: RegExp = /[ \n\t>]/; //用于分词
   //private rExpForNewline: RegExp = /[A-Z]/;  //用于匹配大写首字母然后换行
   private rExpForTimeTag_1: RegExp = /[0-9][0-9]:[0-9][0-9]/; // 用于删除字幕的时间戳日期
-  private rExpForTimeTag_2: RegExp = /-->/; // 用于删除字幕的时间戳-->
+  private rExpForTimeTag_2: RegExp = /--/; // 用于删除字幕的时间戳--
+  private rExpForTimeTag_3: RegExp = /"?#/; // 用于删除color="#ffffff" 与 #
+  // private rExpForTimeTag_4: RegExp = /\w+(?=<\/font)/; // 选中字母后跟随</font>符号的单词，需要删掉后面跟随的</font>
+  private rExpForTimeTag_5: RegExp = /(?<=<)\w+/; // 选中字母前由有符号<的单词，用于删除<font
+
   private rExpForPunctuation: RegExp = /[.。!！?？]/; //用于检测符号换行
   private rExpForWord: RegExp = /[a-zA-Z]+/; //用于提取单词
   private subtitleText: string = 'NOTHING FOUND~';
@@ -61,9 +65,11 @@ export struct TextReader {
           Text() {
             ForEach(this.wordArr, (item: string, index: number) => {
 
-              if (!this.rExpForTimeTag_1.test(item) && !this.rExpForTimeTag_2.test(item)) {
+              if (!this.rExpForTimeTag_1.test(item) && !this.rExpForTimeTag_2.test(item) && !this.rExpForTimeTag_3.test(item)
+                      && !this.rExpForTimeTag_5.test(item) ) {
 
-                Span(item)
+
+                Span(item.split('<')[0])
                   .fontSize(this.fontSize)
                   .fontColor(this.isChosenArr[index] == false ? '#000000' : '#EC5706')
                   .fontWeight(this.fontWeight)
@@ -72,7 +78,6 @@ export struct TextReader {
                     console.info('==== 您点击了span：', item)
 
                     if (item.match(this.rExpForWord) != null) {
-
 
                       this.chosenWordIndex = index;
                       this.isChosenArr[index] = true

@@ -11,9 +11,9 @@ export struct PictureBookModule {
 
 
   async aboutToAppear() {
-    await PreferencesUtil.getToken().then((value) => {
-      this.token = value
-    });
+    // await PreferencesUtil.getToken().then((value) => {
+    //   this.token = value
+    // });
 
   }
 

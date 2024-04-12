@@ -5,6 +5,7 @@ import { SearchMyWordDialog } from '../../view/SearchMyWordDialog';
 @Entry
 @Component
 struct PhotoBookReader {
+  private token: string = (router.getParams() as Record<string, Object>).token as string;
   private coverImgSrc: string = (router.getParams() as Record<string, Object>).coverImgSrc as string;
   private bookName: string = (router.getParams() as Record<string, Object>).bookName as string;
   private FULL_SCREEN_CANVAS_HEIGHT: string = '95%'
@@ -29,7 +30,9 @@ struct PhotoBookReader {
   ; // PHOTO training list
   private bookSrcArr: Array<string> = []
   dialogController_searchMyWord: CustomDialogController = new CustomDialogController({
-    builder: SearchMyWordDialog({}),
+    builder: SearchMyWordDialog({
+      token: this.token
+    }),
     autoCancel: true,
     alignment: DialogAlignment.Center,
     offset: { dx: 0, dy: -20 },

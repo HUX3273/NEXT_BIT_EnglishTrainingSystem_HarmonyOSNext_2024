@@ -18,16 +18,14 @@ struct PictureBookPage {
 
 
   backToMainPage():void{
-    router.replaceUrl({
-      url: 'pages/MainPage',
-    });
+    router.back()
   }
 
   async aboutToAppear() {
 
-    await PreferencesUtil.getToken().then((value) => {
-      this.token = value
-    });
+    // await PreferencesUtil.getToken().then((value) => {
+    //   this.token = value
+    // });
 
     this.getTrainingList_HTTP()
 
@@ -73,7 +71,7 @@ struct PictureBookPage {
 
       List() {
         ListItem() {
-          PictureBookModule({ moduleName: '我的绘本' })
+          PictureBookModule({ moduleName: '我的绘本' ,token: this.token})
             .margin({ top: 20 })
 
         }

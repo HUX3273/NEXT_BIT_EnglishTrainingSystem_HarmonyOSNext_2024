@@ -24,10 +24,16 @@ struct PdfBookReader {
   private bookSrc: string = (router.getParams() as Record<string, Object>).bookSrc as string
   private coverImgSrc: string = (router.getParams() as Record<string, Object>).coverImgSrc as string;
   private bookName: string = (router.getParams() as Record<string, Object>).bookName as string;
+  private token: string = (router.getParams() as Record<string, Object>).token as string;
+  private srcId:number = (router.getParams() as Record<string, Object>).srcId as number;
+
+  private recordId:number = -1
+  studyRecord:StudyRecord = new StudyRecord(-1)
+
 
   dialogController_searchMyWord: CustomDialogController = new CustomDialogController({
     builder: SearchMyWordDialog({
-
+      token:this.token
     }),
     autoCancel: true,
     alignment: DialogAlignment.Center,
@@ -38,11 +44,6 @@ struct PdfBookReader {
 
 
 
-  private token: string = (router.getParams() as Record<string, Object>).token as string;
-  private srcId:number = (router.getParams() as Record<string, Object>).srcId as number;
-
-  private recordId:number = -1
-  studyRecord:StudyRecord = new StudyRecord(-1)
 
 
   async aboutToAppear() {
@@ -55,6 +56,20 @@ struct PdfBookReader {
       console.info('==== 设置屏幕 orientation 成功' );
     } catch (exception) {
       console.error('==== 设置失败: ' + JSON.stringify(exception));
+    }
+
+    //设置不显示bar
+    let names = [];
+    try {
+      globalThis.windowClass.setWindowSystemBarEnable(names, (err: BusinessError) => {
+        if (err.code) {
+          console.error('==== Failed to set the system bar to be invisible. Cause:' + JSON.stringify(err));
+          return;
+        }
+        console.info('==== Succeeded in setting the system bar to be invisible.');
+      });
+    } catch (exception) {
+      console.error('==== Failed to set the system bar to be invisible. Cause:' + JSON.stringify(exception));
     }
 
 
@@ -75,6 +90,20 @@ struct PdfBookReader {
       console.info('==== 设置屏幕 orientation 成功' );
     } catch (exception) {
       console.error('==== 设置失败: ' + JSON.stringify(exception));
+    }
+
+    // 恢复显示bar
+    let names = ['status', 'navigation'];
+    try {
+      globalThis.windowClass.setWindowSystemBarEnable(names, (err: BusinessError) => {
+        if (err.code) {
+          console.error('==== Failed to set the system bar to be invisible. Cause:' + JSON.stringify(err));
+          return;
+        }
+        console.info('==== Succeeded in setting the system bar to be invisible.');
+      });
+    } catch (exception) {
+      console.error('==== Failed to set the system bar to be invisible. Cause:' + JSON.stringify(exception));
     }
 
     // 结束计时

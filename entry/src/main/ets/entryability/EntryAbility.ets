@@ -26,7 +26,7 @@ export default class EntryAbility extends UIAbility {
 
 
     // 设置默认首选项数据
-    PreferencesUtil.saveDefaultAll(10,'','2ed90bd3-446b-41a6-b8cd-f804f718382a','3325','');
+    PreferencesUtil.saveDefaultAll(16,'','','','');
 
 
   }

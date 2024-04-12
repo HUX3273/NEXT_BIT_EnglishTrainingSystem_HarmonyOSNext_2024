@@ -17,9 +17,9 @@ export struct MultiMediaModule {
   @Consume training: Array<Training>;
 
   async aboutToAppear() {
-    await PreferencesUtil.getToken().then((value) => {
-      this.token = value
-    });
+    // await PreferencesUtil.getToken().then((value) => {
+    //   this.token = value
+    // });
   }
 
   build() {

@@ -5,9 +5,7 @@ struct OralPracticePage {
   @State title: string = '口语练习'
 
   backToMainPage():void{
-    router.replaceUrl({
-      url: 'pages/MainPage',
-    });
+    router.back()
   }
 
   build() {

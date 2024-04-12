@@ -12,7 +12,7 @@ import { HttpPlayer } from '../../view/HttpsPlayer';
 
 @Entry
 @Component
-struct Play {
+struct SimpleMediaPlay {
   private mediaSrc: string = (router.getParams() as Record<string, Object>).mediaSrc as string;
   private mediaName: string = (router.getParams() as Record<string, Object>).mediaName as string;
   private mediaType: string = (router.getParams() as Record<string, Object>).mediaType as string;

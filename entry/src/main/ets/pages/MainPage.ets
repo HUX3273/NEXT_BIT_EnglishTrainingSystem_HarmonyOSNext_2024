@@ -4,8 +4,9 @@ import router from '@ohos.router';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import CommonConstants from '../common/constants/CommonConstants';
 import http from '@ohos.net.http';
-import { window } from '@kit.ArkUI';
+import { promptAction, window } from '@kit.ArkUI';
 import { BusinessError } from '@kit.BasicServicesKit';
+import { ChangeAccountDialog } from '../view/ChangeAccountDialog';
 
 @Entry
 @Component
@@ -17,6 +18,24 @@ struct MainPage {
   @State userID: string = (router.getParams() as Record<string, Object>).userID as string;
   @State avatar: string = (router.getParams() as Record<string, Object>).avatar as string;
 
+  @State accountIndex:number = (router.getParams() as Record<string, Object>).accountIndex as number;
+
+  dialogController_changeAccount: CustomDialogController = new CustomDialogController({
+    builder: ChangeAccountDialog({
+
+
+    }),
+    autoCancel: true,
+    alignment: DialogAlignment.Center,
+    offset: { dx: 0, dy: -20 },
+    gridCount: 4,
+    customStyle: false
+  })
+
+
+
+
+
   pageJump(desPage: String): void {
     router.pushUrl({
       url: 'pages/study_pages/' + desPage,
@@ -27,29 +46,50 @@ struct MainPage {
     });
   }
 
+
+
   async aboutToAppear() {
 
-    await PreferencesUtil.getUserName().then((value) => {
-      this.userName = value;
-    });
+    if(this.accountIndex == 0){
 
-    await PreferencesUtil.getToken().then((value) => {
-      this.token = value
-    });
+      await PreferencesUtil.getUserName().then((value) => {
+        this.userName = value;
+      });
+      await PreferencesUtil.getToken().then((value) => {
+        this.token = value
+      });
+      await PreferencesUtil.getUserID().then((value) => {
+        this.userID = value
+      });
+      await PreferencesUtil.getAvatar().then((value) => {
+        this.avatar = value
+      });
 
-    await PreferencesUtil.getUserID().then((value) => {
-      this.userID = value
-    });
+    } else if(this.accountIndex == 1){
 
-    await PreferencesUtil.getAvatar().then((value) => {
-      this.avatar = value
-    });
+      await PreferencesUtil.getUserName_1().then((value) => {
+        this.userName = value;
+      });
+      await PreferencesUtil.getToken_1().then((value) => {
+        this.token = value
+      });
+      await PreferencesUtil.getUserID_1().then((value) => {
+        this.userID = value
+      });
+      await PreferencesUtil.getAvatar_1().then((value) => {
+        this.avatar = value
+      });
+
+    }
+
+
   }
 
   build() {
     Column() {
       Row() {
         Row() {
+
           Stack() {
             Row() {
               Stack() {
@@ -99,6 +139,14 @@ struct MainPage {
           .width('90%')
           .margin({ top: 50,left:'10%'})
           .alignContent(Alignment.Start)
+          .onClick(()=>{
+
+            // TODO 打开切换账号的界面，选定新账号后刷新本界面
+            promptAction.showToast({message:"hello world!"})
+            this.dialogController_changeAccount.open()
+
+
+          })
 
         }
         .width('50%')
@@ -149,10 +197,19 @@ struct MainPage {
                     action: () => {
                       console.info('====确认登出');
                       this.logout_HTTP()
-                      PreferencesUtil.deleteUserName()
-                      PreferencesUtil.deleteToken()
-                      PreferencesUtil.deleteUserID()
-                      PreferencesUtil.deleteAvatar()
+
+                      if(this.accountIndex == 0){
+                        PreferencesUtil.deleteUserName()
+                        PreferencesUtil.deleteToken()
+                        PreferencesUtil.deleteUserID()
+                        PreferencesUtil.deleteAvatar()
+                      } else if(this.accountIndex == 1){
+                        PreferencesUtil.deleteUserName_1()
+                        PreferencesUtil.deleteToken_1()
+                        PreferencesUtil.deleteUserID_1()
+                        PreferencesUtil.deleteAvatar_1()
+                      }
+
                       // 跳转登出页面
                       router.replaceUrl({
                         url: 'pages/LoginPage',

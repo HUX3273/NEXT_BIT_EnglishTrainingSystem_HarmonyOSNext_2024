@@ -26,9 +26,9 @@ export struct SearchMyWordDialog {
   ownController: CustomDialogController
 
   async aboutToAppear() {
-    await PreferencesUtil.getToken().then((value) => {
-      this.token = value
-    });
+    // await PreferencesUtil.getToken().then((value) => {
+    //   this.token = value
+    // });
 
   }
 

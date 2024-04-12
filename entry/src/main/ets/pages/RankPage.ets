@@ -20,9 +20,7 @@ struct RankPage {
   @State isPageLoading:Boolean = true
 
   backToMainPage(): void {
-    router.replaceUrl({
-      url: 'pages/MainPage',
-    });
+    router.back()
   }
 
   aboutToAppear(): void {

@@ -35,9 +35,7 @@ struct ShinyCardPage {
   private reviewedCount:number = 0;
 
   backToMainPage(): void {
-    router.replaceUrl({
-      url: 'pages/MainPage',
-    });
+    router.back()
   }
 
 
