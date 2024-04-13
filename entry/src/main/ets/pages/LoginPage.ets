@@ -27,10 +27,12 @@ struct LoginPage {
   @State token: string = ''
   @State userID: string = ''
   @State avatar: string = ''
-  @State accountIndex: number = 0
+  @State accountIndex: number = -1
   @State haveLoggedIn: Boolean = false
   dialogController_changeAccount: CustomDialogController = new CustomDialogController({
-    builder: ChangeAccountDialog({}),
+    builder: ChangeAccountDialog({
+      accountIndex:this.accountIndex
+    }),
     autoCancel: true,
     alignment: DialogAlignment.Center,
     offset: { dx: 0, dy: -20 },
@@ -192,6 +194,7 @@ struct LoginPage {
               token: this.token,
               userID: this.userID,
               avatar: this.avatar,
+              accountIndex:this.accountIndex
             }
           })
         } else {

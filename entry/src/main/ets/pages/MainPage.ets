@@ -22,8 +22,7 @@ struct MainPage {
 
   dialogController_changeAccount: CustomDialogController = new CustomDialogController({
     builder: ChangeAccountDialog({
-
-
+      accountIndex:this.accountIndex
     }),
     autoCancel: true,
     alignment: DialogAlignment.Center,
@@ -271,7 +270,7 @@ struct MainPage {
       .margin({ top: 10 })
 
 
-      Flex(){
+      Row(){
         // 测试按钮
         Button('TestPage entrance')
           .onClick(() => {
@@ -304,7 +303,7 @@ struct MainPage {
         //     });
         //   })
 
-      }
+      }.width('100%')
 
 
     }
@@ -313,8 +312,8 @@ struct MainPage {
   }
 
 
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // 在后台把本token注销
   logout_HTTP() {

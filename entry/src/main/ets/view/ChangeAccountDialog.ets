@@ -3,7 +3,7 @@ import PreferencesUtil from '../common/database/PreferencesUtil'
 
 @CustomDialog
 export struct ChangeAccountDialog {
-  controller: CustomDialogController // 自己的controller一定要放在最后
+  @State accountIndex: number = -1
   private maxAccountNum = 2
   @State loggedInAccountNum: number = 0;
   @State userName: string = '';
@@ -14,12 +14,11 @@ export struct ChangeAccountDialog {
   @State token_1: string = '';
   @State userID_1: string = '';
   @State avatar_1: string = '';
-
   // @State userName_2: string = '';
   // @State token_2: string = '';
   // @State userID_2: string = '';
   // @State avatar_2: string = '';
-
+  controller: CustomDialogController // 自己的controller一定要放在最后
 
   async aboutToAppear() {
 
@@ -70,20 +69,17 @@ export struct ChangeAccountDialog {
             .zIndex(2)
 
             Row() {
-
               // 名字
               Text(this.userName)
                 .fontSize(20)
                 .fontWeight(FontWeight.Medium)
                 .textAlign(TextAlign.Start)
-
-
             }
             .justifyContent(FlexAlign.Center)
             .height(60)
             .borderRadius(35)
             .width('100%')
-            .backgroundColor('#F8F8F8')
+            .backgroundColor(this.accountIndex == 0 ? '#FFAA43' : '#F8F8F8')
             .zIndex(0)
           }
           .width('100%')
@@ -133,20 +129,17 @@ export struct ChangeAccountDialog {
             .zIndex(2)
 
             Row() {
-
               // 名字
               Text(this.userName_1)
                 .fontSize(20)
                 .fontWeight(FontWeight.Medium)
                 .textAlign(TextAlign.Start)
-
-
             }
             .justifyContent(FlexAlign.Center)
             .height(60)
             .borderRadius(35)
             .width('100%')
-            .backgroundColor('#F8F8F8')
+            .backgroundColor(this.accountIndex == 1 ? '#FFAA43' : '#F8F8F8')
             .zIndex(0)
           }
           .width('100%')
@@ -175,14 +168,14 @@ export struct ChangeAccountDialog {
         .fontSize(18)
         .fontColor("#ff0090ff")
         .fontWeight(FontWeight.Medium)
-        .margin({ top: 30,bottom:30 })
+        .margin({ top: 30, bottom: 30 })
         .onClick(() => {
           if (this.loggedInAccountNum < this.maxAccountNum) { // 如果用户上限未满
             router.replaceUrl({
               url: 'pages/LoginPage',
             })
           } else {
-            promptAction.showDialog({ message: "已达到可登录账户上限，请先注销一个用户" })
+            promptAction.showDialog({ message: "已达到可登录账户上限，请先退出一个账户" })
           }
         })
     }

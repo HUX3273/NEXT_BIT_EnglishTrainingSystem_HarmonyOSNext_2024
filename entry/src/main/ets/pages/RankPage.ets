@@ -1,10 +1,8 @@
 import router from '@ohos.router';
-import CommonConstants from '../common/constants/CommonConstants';
 import { RankList } from '../model/RankList';
 import { http } from '@kit.NetworkKit';
 import { Rank } from '../model/Rank';
 import RankListItem from '../view/RankListItem';
-import { LoadingDialog } from '@ohos.arkui.advanced.Dialog';
 
 
 @Entry
@@ -14,10 +12,9 @@ struct RankPage {
   token: string = (router.getParams() as Record<string, Object>).token as string;
   userID: string = (router.getParams() as Record<string, Object>).userID as string;
   @State rankList: RankList = new RankList(-1, -1, '', '', -1, [])
-
-  @State rankType:string = "DAYS"
-  @State resourceContentType:string = "PICTURE_BOOK"
-  @State isPageLoading:Boolean = true
+  @State rankType: string = "DAYS"
+  @State resourceContentType: string = "PICTURE_BOOK"
+  @State isPageLoading: Boolean = true
 
   backToMainPage(): void {
     router.back()
@@ -67,8 +64,8 @@ struct RankPage {
             .fontSize(12)
             .fontWeight(FontWeight.Normal)
             .fontWeight(FontWeight.Normal)
-          if(this.isPageLoading == false){
-            Text(this.rankList.currentRankNo.toString())
+          if (this.isPageLoading == false) {
+            Text(!this.rankList.currentRankNo ? '暂无' : this.rankList.currentRankNo.toString())
               .fontSize(18)
               .fontWeight(FontWeight.Normal)
               .fontWeight(FontWeight.Normal)
@@ -79,8 +76,6 @@ struct RankPage {
         .height(40)
         .justifyContent(FlexAlign.Center)
 
-
-
       }
       .width('100%')
       .height('5%')
@@ -89,7 +84,7 @@ struct RankPage {
 
 
       // 选择榜单类型
-      Row(){
+      Row() {
         Row() {
 
           // 选择统计周期
@@ -99,7 +94,7 @@ struct RankPage {
               { value: '日榜' },
               { value: '周榜' },
               { value: '月榜' },
-              { value: '总榜'}])
+              { value: '总榜' }])
               .selected(0)
               .value('日榜')
               .font({ size: 16, weight: 500 })
@@ -109,13 +104,13 @@ struct RankPage {
               .onSelect((index: number) => {
                 console.info('==== 统计周期Select:' + index)
 
-                if(index == 0){
+                if (index == 0) {
                   this.rankType = 'DAYS'
-                } else if(index == 1){
+                } else if (index == 1) {
                   this.rankType = 'WEEK'
-                } else if(index == 2){
+                } else if (index == 2) {
                   this.rankType = 'MONTH'
-                } else if(index == 3){
+                } else if (index == 3) {
                   this.rankType = 'ALL'
                 }
 
@@ -131,7 +126,7 @@ struct RankPage {
               { value: '绘本' },
               { value: '视频' },
               { value: '音频' },
-              { value: '闪卡'}])
+              { value: '闪卡' }])
               .selected(2)
               .value('音频')
               .font({ size: 16, weight: 500 })
@@ -141,13 +136,13 @@ struct RankPage {
               .onSelect((index: number) => {
                 console.info('==== 学习资源类型Select:' + index)
 
-                if(index == 0){
+                if (index == 0) {
                   this.resourceContentType = 'PICTURE_BOOK'
-                } else if(index == 1){
+                } else if (index == 1) {
                   this.resourceContentType = 'VIDEO'
-                } else if(index == 2){
+                } else if (index == 2) {
                   this.resourceContentType = 'AUDIO'
-                } else if(index == 3){
+                } else if (index == 3) {
                   this.resourceContentType = 'FLASH_CARD'
                 }
 
@@ -161,12 +156,12 @@ struct RankPage {
         //.backgroundColor('#ffff9f2b')
         .width("70%")
 
-        Row(){
+        Row() {
           Button("查询")
             .backgroundColor('#fffc8a00')
-            .onClick(()=>{
+            .onClick(() => {
               this.isPageLoading = true
-              this.getStudyRankList_HTTP(this.rankType,this.resourceContentType)
+              this.getStudyRankList_HTTP(this.rankType, this.resourceContentType)
             })
         }
         .height('90%')
@@ -177,8 +172,7 @@ struct RankPage {
       .width('100%')
 
 
-
-      if(this.isPageLoading == true){
+      if (this.isPageLoading == true) {
         LoadingProgress()
           .width(60).height(60)
       } else {
@@ -209,7 +203,7 @@ struct RankPage {
   getStudyRankList_HTTP(rankType: string, resourceContentType: string) {
     console.info('==== 查询排行榜')
     //console.info('==== token:' + this.token)
-    let url = 'https://toolkit.diegodad.com/client/api/study/rank-list?rankType=' +rankType+ '&resourceContentType='+resourceContentType
+    let url = 'https://toolkit.diegodad.com/client/api/study/rank-list?rankType=' + rankType + '&resourceContentType=' + resourceContentType
 
     let httpRequest_getStudyRankList = http.createHttp();
     httpRequest_getStudyRankList.request(// 请求url地址
@@ -240,7 +234,7 @@ struct RankPage {
 
         console.info("==== " + rankType + " " + resourceContentType + " 排名结果：" + this.rankList.currentRankNo)
         //清求成功
-        if (data.responseCode == 200){
+        if (data.responseCode == 200) {
           this.rankList = JSON.parse(JSON.parse(json_string))
           if (this.rankList.currentRankNo != null && (this.rankList.currentRankNo >= 1 && this.rankList.currentRankNo <= this.rankList.rankListList.length)) {
             let index = this.rankList.currentRankNo - 1
