@@ -163,7 +163,8 @@ struct SimpleMediaPlay {
             // 文本阅读器
             TextReader({
               videoName: this.mediaName,
-              subtitleText: this.subtitleText
+              subtitleText: this.subtitleText,
+              token:this.token
             })
               .height('95%')
               .width('100%')
@@ -240,7 +241,8 @@ struct SimpleMediaPlay {
               // 文本阅读器
               TextReader({
                 videoName: this.mediaName,
-                subtitleText: this.subtitleText
+                subtitleText: this.subtitleText,
+                token:this.token
               })
                 .height('100%')
                 .width('100%')

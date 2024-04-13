@@ -210,7 +210,8 @@ struct ShinyCardPage {
                       subtitleText: this.studyList.flashcards[this.pageIndex].enDescription,
                       //scroller:this.scroller,
                       fontSize: 20,
-                      fontWeight:FontWeight.Medium
+                      fontWeight:FontWeight.Medium,
+                      token:this.token
                     })
                       .width('100%')
                       .margin({ top: 20 })

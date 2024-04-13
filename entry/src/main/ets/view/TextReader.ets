@@ -42,9 +42,9 @@ export struct TextReader {
   private fontWeight: FontWeight = FontWeight.Bold;
 
   async aboutToAppear() {
-    await PreferencesUtil.getToken().then((value) => {
-      this.token = value
-    });
+    // await PreferencesUtil.getToken().then((value) => {
+    //   this.token = value
+    // });
     //this.readfile_from_rawfile();
 
     // 分词

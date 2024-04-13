@@ -54,7 +54,7 @@ export struct ChangeAccountDialog {
                   .height(65)
                   .width(65)
                   .borderRadius(45)
-                  .backgroundImage($r('app.media.user_default'))
+                  .backgroundImage('')
                   .zIndex(2)
                 Text()
                   .height(75)
@@ -181,6 +181,10 @@ export struct ChangeAccountDialog {
     }
 
   }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
   async getLoggedUserInfo() {
 
