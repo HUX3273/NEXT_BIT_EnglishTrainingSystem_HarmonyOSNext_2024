@@ -1,8 +1,8 @@
 import router from '@ohos.router';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import { Training } from '../model/Training';
-import { HorizontalPictureBookItem } from '../viewmodel/HorizontalMultiMediaItem';
-import { HORIZONTAL_PICTUREBOOKS } from '../viewmodel/MultiMediaData';
+
+
 @Component
 export struct PictureBookModule {
   private moduleName: string = '';
@@ -48,7 +48,7 @@ export struct PictureBookModule {
           .margin({ left: 8, right: 8, bottom: 10 })
           .backgroundColor("#ffffff")
           .borderRadius(24)
-        }, (item: HorizontalPictureBookItem) => JSON.stringify(item))
+        })
       }
       .columnsGap(18)
 

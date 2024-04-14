@@ -1,8 +1,7 @@
 import router from '@ohos.router';
 import http from '@ohos.net.http';
 import { StudyList } from '../../model/StudyList';
-import { VideoPlayer } from '../../view/MediaPlayer';
-import { ShinyCardWords } from '../../viewmodel/ShinyCardWords';
+
 import CommonConstants from '../../common/constants/CommonConstants';
 import prompt from '@ohos.prompt';
 import { FlashCard } from '../../model/FlashCard';

@@ -1,5 +1,4 @@
-import { HORIZONTAL_AUDIOS, HORIZONTAL_VIDEOS } from '../viewmodel/MultiMediaData';
-import { HorizontalMultiMediaItem } from '../viewmodel/HorizontalMultiMediaItem';
+
 import router from '@ohos.router';
 import { Training } from '../model/Training';
 import PreferencesUtil from '../common/database/PreferencesUtil';
@@ -52,7 +51,7 @@ export struct MultiMediaModule {
               .borderRadius(24)
           }
 
-        }, (item: HorizontalMultiMediaItem) => JSON.stringify(item))
+        })
       }
     }
     .margin({

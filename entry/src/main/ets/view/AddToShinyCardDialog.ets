@@ -1,7 +1,6 @@
 import http from '@ohos.net.http';
 import CommonConstants from '../common/constants/CommonConstants';
 
-import { ShinyCardPictureItem } from '../viewmodel/ChooseShinyCardPicture';
 import promptAction from '@ohos.promptAction';
 import { AddFlashCardArgs } from '../net/request/AddFlashCardArgs';
 import { FlashCard } from '../model/FlashCard';
@@ -155,7 +154,7 @@ export struct AddToShinyCardDialog {
             }
             .borderRadius(12)
 
-          }, (item: ShinyCardPictureItem) => JSON.stringify(item))
+          })
 
         }
         .columnsTemplate('1fr 1fr 1fr')
