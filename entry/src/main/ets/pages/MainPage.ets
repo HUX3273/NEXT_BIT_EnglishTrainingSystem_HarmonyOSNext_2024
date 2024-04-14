@@ -4,25 +4,34 @@ import router from '@ohos.router';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import CommonConstants from '../common/constants/CommonConstants';
 import http from '@ohos.net.http';
-import { promptAction, window } from '@kit.ArkUI';
-import { BusinessError } from '@kit.BasicServicesKit';
 import { ChangeAccountDialog } from '../view/ChangeAccountDialog';
+import { SearchMyWordDialog } from '../view/SearchMyWordDialog';
 
 @Entry
 @Component
 struct MainPage {
   @State message: string = 'Hello World'
-
   @State userName: string = (router.getParams() as Record<string, Object>).userName as string;
   @State token: string = (router.getParams() as Record<string, Object>).token as string;
   @State userID: string = (router.getParams() as Record<string, Object>).userID as string;
   @State avatar: string = (router.getParams() as Record<string, Object>).avatar as string;
-
-  @State accountIndex:number = (router.getParams() as Record<string, Object>).accountIndex as number;
+  @State accountIndex: number = (router.getParams() as Record<string, Object>).accountIndex as number;
 
   dialogController_changeAccount: CustomDialogController = new CustomDialogController({
     builder: ChangeAccountDialog({
-      accountIndex:this.accountIndex
+      accountIndex: this.accountIndex
+    }),
+    autoCancel: true,
+    alignment: DialogAlignment.Center,
+    offset: { dx: 0, dy: -20 },
+    gridCount: 4,
+    customStyle: false
+  })
+
+
+  dialogController_searchMyWord: CustomDialogController = new CustomDialogController({
+    builder: SearchMyWordDialog({
+      token:this.token
     }),
     autoCancel: true,
     alignment: DialogAlignment.Center,
@@ -45,11 +54,9 @@ struct MainPage {
     });
   }
 
-
-
   async aboutToAppear() {
 
-    if(this.accountIndex == 0){
+    if (this.accountIndex == 0) {
 
       await PreferencesUtil.getUserName().then((value) => {
         this.userName = value;
@@ -64,7 +71,7 @@ struct MainPage {
         this.avatar = value
       });
 
-    } else if(this.accountIndex == 1){
+    } else if (this.accountIndex == 1) {
 
       await PreferencesUtil.getUserName_1().then((value) => {
         this.userName = value;
@@ -86,14 +93,33 @@ struct MainPage {
 
   build() {
     Column() {
-      Row() {
-        Row() {
 
+      // 搜词
+      Row() {
+        Image($r('app.media.search'))
+          .width(26)
+          .height(26)
+          .margin({ right: 20 })
+      }
+      .justifyContent(FlexAlign.End)
+      .width('100%').height(50)
+      .onClick(() => {
+        // 点击右上角加号自己搜词
+        this.dialogController_searchMyWord.open()
+
+      })
+
+
+      // 头像 + 用户名 + 排名 + 登出按钮
+      Row() {
+
+        // 头像 + 用户名
+        Row() {
           Stack() {
             Row() {
               Stack() {
                 // 显示用户头像
-                if(this.avatar == null || this.avatar == ''){
+                if (this.avatar == null || this.avatar == '') {
                   Image($r('app.media.user_default'))
                     .height(67)
                     .width(67)
@@ -136,29 +162,26 @@ struct MainPage {
             .zIndex(0)
           }
           .width('90%')
-          .margin({ top: 50,left:'10%'})
+          .margin({ left: '10%' })
           .alignContent(Alignment.Start)
-          .onClick(()=>{
-
-            // TODO 打开切换账号的界面，选定新账号后刷新本界面
-            promptAction.showToast({message:"hello world!"})
+          .onClick(() => {
+            // 打开切换账号的界面，选定新账号后刷新本界面
+            // promptAction.showToast({message:"hello world!"})
             this.dialogController_changeAccount.open()
-
-
           })
 
         }
         .width('50%')
+
         //.backgroundColor('#1fffff')
 
-
+        // 排名 + 登出
         Row() {
-
           // 排名
           Image($r('app.media.rank'))
             .width(70)
             .height(70)
-            .margin({ top: 50, right: 10 })
+            .margin({ right: 10 })
             .onClick(() => {
               // 跳转到排名页面
               router.pushUrl({
@@ -174,7 +197,7 @@ struct MainPage {
           Image($r('app.media.logout'))
             .width(70)
             .height(70)
-            .margin({ top: 50, right: '10%' })
+            .margin({ right: '10%' })
             .onClick(() => {
 
               AlertDialog.show(
@@ -197,12 +220,12 @@ struct MainPage {
                       console.info('====确认登出');
                       this.logout_HTTP()
 
-                      if(this.accountIndex == 0){
+                      if (this.accountIndex == 0) {
                         PreferencesUtil.deleteUserName()
                         PreferencesUtil.deleteToken()
                         PreferencesUtil.deleteUserID()
                         PreferencesUtil.deleteAvatar()
-                      } else if(this.accountIndex == 1){
+                      } else if (this.accountIndex == 1) {
                         PreferencesUtil.deleteUserName_1()
                         PreferencesUtil.deleteToken_1()
                         PreferencesUtil.deleteUserID_1()
@@ -270,7 +293,7 @@ struct MainPage {
       .margin({ top: 10 })
 
 
-      Row(){
+      Row() {
         // 测试按钮
         Button('TestPage entrance')
           .onClick(() => {
@@ -305,15 +328,13 @@ struct MainPage {
 
       }.width('100%')
 
-
     }
     .height('100%')
     .width('100%')
   }
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // 在后台把本token注销
   logout_HTTP() {
@@ -351,5 +372,4 @@ struct MainPage {
       }
     })
   }
-
 }
