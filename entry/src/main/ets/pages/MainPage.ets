@@ -1,5 +1,5 @@
-import MainViewModel from '../view/MainViewModel';
-import MainPageGrid from '../view/MainPageGrid';
+import MainViewModel from '../model/MainViewModel';
+import MainPageGrid from '../model/MainPageGrid';
 import router from '@ohos.router';
 import PreferencesUtil from '../common/database/PreferencesUtil';
 import CommonConstants from '../common/constants/CommonConstants';
