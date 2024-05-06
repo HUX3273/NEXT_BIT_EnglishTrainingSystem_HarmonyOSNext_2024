@@ -65,7 +65,6 @@ struct SimpleMediaPlay {
 
   onPageHide() {
     this.controller.pause();
-    // TODO 同步该视频的播放进度到后台
 
   }
 
@@ -286,7 +285,6 @@ struct SimpleMediaPlay {
         this.exchangeFullScreenIcon = $r('app.media.down')
 
       } else if (this.mediaType == '我的视频') {
-        // TODO 取屏幕宽度，然后用 ratio 做自适应高度
         this.mediaPlayerHeight = '30%'
         this.textReaderHeight = '65%'
         this.exchangeFullScreenIcon = $r('app.media.down')

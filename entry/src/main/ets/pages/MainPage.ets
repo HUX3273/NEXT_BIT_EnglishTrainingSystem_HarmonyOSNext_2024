@@ -293,40 +293,41 @@ struct MainPage {
       .margin({ top: 10 })
 
 
-      Row() {
-        // 测试按钮
-        Button('TestPage entrance')
-          .onClick(() => {
-            //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
-            //console.info('====测试：' + simpleName)
-            router.pushUrl({
-              url: 'pages/TestPage',
-
-            });
-          })
-
-        // 网页按钮
-        Button('WebPage entrance')
-          .onClick(() => {
-            //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
-            //console.info('====测试：' + simpleName)
-            router.pushUrl({
-              url: 'pages/WebPage',
-            });
-          })
-
-
-        // // AVPLAYER
-        // Button('AVPLAYER entrance')
-        //   .onClick(() => {
-        //     //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
-        //     //console.info('====测试：' + simpleName)
-        //     router.pushUrl({
-        //       url: "pages/secondary_pages/HttpsPlayer",
-        //     });
-        //   })
-
-      }.width('100%')
+      // 测试入口
+      // Row() {
+      //   // 测试按钮
+      //   Button('TestPage entrance')
+      //     .onClick(() => {
+      //       //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
+      //       //console.info('====测试：' + simpleName)
+      //       router.pushUrl({
+      //         url: 'pages/TestPage',
+      //
+      //       });
+      //     })
+      //
+      //   // 网页按钮
+      //   Button('WebPage entrance')
+      //     .onClick(() => {
+      //       //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
+      //       //console.info('====测试：' + simpleName)
+      //       router.pushUrl({
+      //         url: 'pages/WebPage',
+      //       });
+      //     })
+      //
+      //
+      //   // // AVPLAYER
+      //   // Button('AVPLAYER entrance')
+      //   //   .onClick(() => {
+      //   //     //let simpleName = AppStorage.SetAndLink('simplePropName', "你好")
+      //   //     //console.info('====测试：' + simpleName)
+      //   //     router.pushUrl({
+      //   //       url: "pages/secondary_pages/HttpsPlayer",
+      //   //     });
+      //   //   })
+      //
+      // }.width('100%')
 
     }
     .height('100%')

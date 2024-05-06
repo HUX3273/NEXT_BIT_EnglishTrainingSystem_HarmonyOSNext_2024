@@ -43,9 +43,6 @@ struct PdfBookReader {
   })
 
 
-
-
-
   async aboutToAppear() {
 
     // 允许自旋转
@@ -114,75 +111,78 @@ struct PdfBookReader {
   build() {
     Column() {
 
-      // 标题栏
-      Row() {
-        // 返回上一页
-        Row() {
-          Image($r('app.media.ic_back'))
-            .width(30)
-            .height(30)
-            .margin({ left: 10 })
-            .onClick(() => {
-              // 页面跳转
-              router.back();
-            })
-        }
-        .width('10%')
-        .height(40)
 
-        // 标题
-        Row() {
-          Text(this.bookName)
-            .fontSize(18)
-            .fontWeight(FontWeight.Medium)
-            .fontWeight(FontWeight.Medium)
-
-        }
-        .height(40)
-        .width('80%')
-        .justifyContent(FlexAlign.Center)
-
-        Row() {
-          Image($r('app.media.search'))
-            .width(26)
-            .height(26)
-            .margin({right:20})
-
-        }
-        .height(40)
-        .width('10%')
-        .onClick(() => {
-          // 点击右上角加号自己搜词
-          this.dialogController_searchMyWord.open()
-
-        })
-        //.justifyContent(FlexAlign.Center)
-
-      }
-      .width('100%')
-      .backgroundColor('#FFFFFF')
-      .height("5%")
-      .onAppear(async  () => {
-        try {
-          console.info(" ==== "+this.pdfUrl)
-          // this.pdfUrl = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';
-          this.interceptedUrl = url.URL.parseURL(this.pdfUrl).origin;
-          this.webviewController.loadUrl(`${this.interceptedUrl}/pdfviewer/viewer.html#${this.pdfUrl}`);
-        } catch (error) {
-          const e: BusinessError = error as BusinessError;
-          console.error(`==== ErrorCode: ${e.code},  Message: ${e.message}`);
-        }
-      })
 
 
 
       Stack(){
 
-        Text("")
-          .width("100%")
-          .height(33)
-          .backgroundColor("#ffffff")
-          .zIndex(2)
+        // 标题栏
+        Row() {
+          // 返回上一页
+          Row() {
+            Image($r('app.media.ic_back'))
+              .width(30)
+              .height(30)
+              .margin({ left: 10 })
+              .onClick(() => {
+                // 页面跳转
+                router.back();
+              })
+          }
+          .width('10%')
+          .height(40)
+
+          // 标题
+          Row() {
+            Text(this.bookName)
+              .fontSize(18)
+              .fontWeight(FontWeight.Medium)
+              .fontWeight(FontWeight.Medium)
+
+          }
+          .height(40)
+          .width('80%')
+          .justifyContent(FlexAlign.Center)
+
+          Row() {
+            Image($r('app.media.search'))
+              .width(26)
+              .height(26)
+              .margin({right:20})
+
+          }
+          .height(40)
+          .width('10%')
+          .onClick(() => {
+            // 点击右上角加号自己搜词
+            this.dialogController_searchMyWord.open()
+
+          })
+          //.justifyContent(FlexAlign.Center)
+
+        }
+        .width('100%')
+        .backgroundColor('#FFFFFF')
+        .height(33)
+        .zIndex(3)
+        .onAppear(async  () => {
+          try {
+            console.info(" ==== "+this.pdfUrl)
+            // this.pdfUrl = 'https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf';
+            this.interceptedUrl = url.URL.parseURL(this.pdfUrl).origin;
+            this.webviewController.loadUrl(`${this.interceptedUrl}/pdfviewer/viewer.html#${this.pdfUrl}`);
+          } catch (error) {
+            const e: BusinessError = error as BusinessError;
+            console.error(`==== ErrorCode: ${e.code},  Message: ${e.message}`);
+          }
+        })
+
+        // Text("")
+        //   .width("100%")
+        //   .height(33)
+        //   .backgroundColor("#ffffff")
+        //   .zIndex(2)
 
         // pdf显示
         Web({

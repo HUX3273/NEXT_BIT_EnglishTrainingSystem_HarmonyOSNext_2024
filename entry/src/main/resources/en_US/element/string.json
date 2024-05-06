@@ -10,7 +10,7 @@
     },
     {
       "name": "EntryAbility_label",
-      "value": "label"
+      "value": "HUX English"
     },
     {
       "name": "login",
@@ -59,6 +59,14 @@
     {
       "name": "empty",
       "value": "Empty"
+    },
+    {
+      "name": "record_location_reason",
+      "value": "Get Location permission"
+    },
+    {
+      "name": "read_media",
+      "value": "Get Read permission"
     }
   ]
 }

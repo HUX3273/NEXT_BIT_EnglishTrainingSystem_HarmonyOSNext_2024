@@ -109,7 +109,7 @@ export struct AddMyImageDialog {
             //   this.updateFlashCard_HTTP(this.chosenPicSrcArr)
             // }
 
-            // TODO 上传图片接口
+
             this.uploadImageForFlashCard_HTTP()
 
 

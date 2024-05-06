@@ -10,7 +10,7 @@
     },
     {
       "name": "EntryAbility_label",
-      "value": "label"
+      "value": "HUX英语"
     },
     {
       "name": "login",
@@ -59,6 +59,14 @@
     {
       "name": "empty",
       "value": "空"
+    },
+    {
+      "name": "record_location_reason",
+      "value": "获取用户定位"
+    },
+    {
+      "name": "read_media",
+      "value": "获取用户定位"
     }
   ]
 }

@@ -9,10 +9,6 @@
       "value": "description"
     },
     {
-      "name": "EntryAbility_label",
-      "value": "label"
-    },
-    {
       "name": "login",
       "value": "Login"
     },
@@ -67,6 +63,10 @@
     {
       "name": "read_media",
       "value": "获取读取权限"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "HUX英语"
     }
   ]
 }
