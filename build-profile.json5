@@ -3,7 +3,7 @@
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "debug",  // 发布时用 default，测试时用 debug
         "compileSdkVersion": "4.1.0(11)",
         "compatibleSdkVersion": "4.1.0(11)",
         "runtimeOS": "HarmonyOS"
@@ -14,13 +14,26 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "C:\\Users\\13219\\.ohos\\config\\default_api11-BIT_EnglishTrainingSystem_HarmonyOSNext_2024_GN4JrHEBlM874ciKNrkSILTwPBHUlORUq5AdJaIVfdE=.cer",
-          "storePassword": "0000001B7AB40324C070E18679B02BBE5266B9F01E204169A9C46AC7B5DF8A30AAB169D14E3710963AD872",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001B0BAAF7AB16876F208F0FDCC9F46A56AA245C5369542440819A1AB796BEC8038C69BB749DBCEB9A",
-          "profile": "C:\\Users\\13219\\.ohos\\config\\default_api11-BIT_EnglishTrainingSystem_HarmonyOSNext_2024_GN4JrHEBlM874ciKNrkSILTwPBHUlORUq5AdJaIVfdE=.p7b",
+          "certpath": "C:/Users/13219/Desktop/NEXT_BIT_EnglishTrainingSystem_HarmonyOSNext_2024/release_cert.cer",
+          "storePassword": "0000001BA81DFDE99F38FF3E85DC15CD287E497773DFED8AE4B132B12D152B2CFB4430E9AD469524FE4563",
+          "keyAlias": "MyAppKey",
+          "keyPassword": "0000001BB6FABD4FA9415C02553723C6378B996F710DB8B880853C2DD8ED6509F9FBF351D370D279BB7AA2",
+          "profile": "C:/Users/13219/Desktop/NEXT_BIT_EnglishTrainingSystem_HarmonyOSNext_2024/HUX EnglishRelease.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\13219\\.ohos\\config\\default_api11-BIT_EnglishTrainingSystem_HarmonyOSNext_2024_GN4JrHEBlM874ciKNrkSILTwPBHUlORUq5AdJaIVfdE=.p12"
+          "storeFile": "C:/Users/13219/Desktop/NEXT_BIT_EnglishTrainingSystem_HarmonyOSNext_2024/release.p12"
+        }
+      },
+      {
+        "name": "debug",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "0000001BFCD08A7822C90905DF1C54254CD79652DC1F60F512B805FC7197111EBF458321C78C1911B86CC7",
+          "certpath": "C:/Users/13219/Desktop/NEXT_BIT_EnglishTrainingSystem_HarmonyOSNext_2024/debugDebug.cer",
+          "keyAlias": "DebugKey",
+          "keyPassword": "0000001BE0FF90115B552C79630D12BA9709571C5AD5AFBECEBC332468A18417F1ED7FD5E140D477B12687",
+          "profile": "C:/Users/13219/Desktop/NEXT_BIT_EnglishTrainingSystem_HarmonyOSNext_2024/debugDebug.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:/Users/13219/Desktop/NEXT_BIT_EnglishTrainingSystem_HarmonyOSNext_2024/debug.p12"
         }
       }
     ]
