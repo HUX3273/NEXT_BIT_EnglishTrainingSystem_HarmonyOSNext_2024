@@ -3,7 +3,7 @@
     "products": [
       {
         "name": "default",
-        "signingConfig": "debug",  // 发布时用 default，测试时用 debug
+        "signingConfig": "default",  // 发布时用 default，测试时用 debug
         "compileSdkVersion": "4.1.0(11)",
         "compatibleSdkVersion": "4.1.0(11)",
         "runtimeOS": "HarmonyOS"
